@@ -1,0 +1,100 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+{% autoescape off %}
+
+  <div class="dashboard-main-body">
+    <form method="post">
+        {% csrf_token %}
+    <div class="row gy-4">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h1 class="card-title mb-0">Spam Email Detector</h1>
+          </div>
+          <div class="card-body">
+            <div class="row gy-3">
+              <div class="col-12">
+                  <label class="form-label" for="email">Paste your email text:</label><br>
+            <textarea class="form-control" name="email" id="email" placeholder="Enter email content here...">{{ request.POST.email }}</textarea><br><br>
+<!--            <button type="submit">Check</button>-->
+                              <button class="btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-8 mt-24 pb-8" type="submit">Predict</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="row gy-3">
+
+<!--              <button class="btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-8 mt-24 pb-8" type="submit">Predict</button>-->
+              {% if prediction %}
+  <p class="prediction">
+    Result:
+    <span style=" {% if 'Spam' in prediction %}{% else %} {% endif %};">
+      {{ prediction }}
+
+    </span>
+
+  </p>
+{# — Show confidence — #}
+  {% if confidence %}
+    <p class="score">
+      Confidence: <strong>{{ confidence }}%</strong>
+    </p>
+  {% endif %}
+{% endif %}
+
+{% if matched_words %}
+  <p class="text-warning">⚠️ Trigger Words: {{ matched_words|join:", " }}</p>
+{% else %}
+  {% if prediction %}
+    <p class="text-success">✅ No known spam keywords found.</p>
+  {% endif %}
+{% endif %}
+
+{% if error %}
+  <p class="error">Error: {{ error }}</p>
+{% endif %}
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </form>
+  </div>
+<style>
+  <style>
+.result-box {
+  background: #fdfdfd;
+  border-left: 5px solid #0d6efd;
+  transition: all 0.3s ease-in-out;
+}
+
+.result-box:hover {
+  transform: scale(1.01);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.prediction {
+  font-size: 1.2rem;
+}
+
+.score {
+  font-size: 1rem;
+  color: #333;
+}
+
+.alert {
+  padding: 10px 15px;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+}
+</style>
+
+</style>
+{% endautoescape %}
+{% endblock %}

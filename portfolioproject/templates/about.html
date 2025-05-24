@@ -1,0 +1,74 @@
+{% load static %}
+{% if request.path == '/' %}
+<!-- About Start (English) -->
+<div class="container-fluid py-5" id="about">
+    <div class="container">
+        <div class="position-relative d-flex align-items-center justify-content-center">
+            <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #dee2e6;">About</h1>
+            <h1 class="position-absolute text-uppercase text-primary">{{ about_data.name }}</h1>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-lg-5 pb-4 pb-lg-0">
+                <img class="img-fluid rounded w-100" src="{{ about_data.img.url }}" alt="{{ about_me.name }}">
+            </div>
+            <div class="col-lg-7">
+                <h3 class="mb-4">{{ about_data.title|safe }}</h3>
+                <p style="text-align: justify;">{{ about_data.bio|safe }}</p>
+                <div class="row mb-3">
+                    <div class="col-sm-6 py-2"><h6>Name: <span class="text-secondary">{{ about_data.name }}</span></h6></div>
+                    <div class="col-sm-6 py-2"><h6>Birthday: <span class="text-secondary">{{ about_data.birthday }}</span></h6></div>
+                    <div class="col-sm-6 py-2"><h6>Degree: <span class="text-secondary">{{ about_data.degree }}</span></h6></div>
+                    <div class="col-sm-6 py-2"><h6>Experience: <span class="text-secondary">{{ about_data.experience }}</span></h6></div>
+                    <div class="col-sm-6 py-2"><h6>Phone: <span class="text-secondary">{{ about_data.phone }}</span></h6></div>
+                    <div class="col-sm-6 py-2"><h6>Email: <span class="text-secondary">{{ about_data.email }}</span></h6></div>
+                    <div class="col-sm-6 py-2"><h6>Address: <span class="text-secondary">{{ about_data.address }}</span></h6></div>
+                    {% if about_me.freelance_available %}
+                        <div class="col-sm-6 py-2"><h6>Freelance: <span class="text-secondary">Yes</span></h6></div>
+                    {% else %}
+                        <div class="col-sm-6 py-2"><h6>Freelance: <span class="text-secondary">No</span></h6></div>
+                    {% endif %}
+                </div>
+                <a href="mailto:masunil012@gmail.com" class="btn btn-outline-primary mr-4">Hire Me</a>
+                <a href="" class="btn btn-outline-primary">Learn More</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- About End (English) -->
+{% else %}
+<!-- About Start (French) -->
+<div class="container-fluid py-5" id="about">
+    <div class="container">
+        <div class="position-relative d-flex align-items-center justify-content-center">
+            <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #dee2e6;">ÀPropos</h1>
+            <h1 class="position-absolute text-uppercase text-primary">{{ about_data.name }}</h1>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-lg-5 pb-4 pb-lg-0">
+                <img class="img-fluid rounded w-100" src="{{ about_data.img.url }}" alt="{{ about_me.name }}">
+            </div>
+            <div class="col-lg-7">
+                <h3 class="mb-4">{{ about_data.title|safe }}</h3>
+                <p style="text-align: justify;">{{ about_data.bio|safe }}</p>
+                <div class="row mb-3">
+                    <div class="col-sm-6 py-2"><h6>Nom: <span class="text-secondary">{{ about_data.name }}</span></h6></div>
+                    <div class="col-sm-6 py-2"><h6>Date de naissance: <span class="text-secondary">{{ about_data.birthday }}</span></h6></div>
+                    <div class="col-sm-6 py-2"><h6>Diplôme: <span class="text-secondary">{{ about_data.degree }}</span></h6></div>
+                    <div class="col-sm-6 py-2"><h6>Expérience: <span class="text-secondary">{{ about_data.experience }}</span></h6></div>
+                    <div class="col-sm-6 py-2"><h6>Téléphone: <span class="text-secondary">{{ about_data.phone }}</span></h6></div>
+                    <div class="col-sm-6 py-2"><h6>Email: <span class="text-secondary">{{ about_data.email }}</span></h6></div>
+                    <div class="col-sm-6 py-2"><h6>Adresse: <span class="text-secondary">{{ about_data.address }}</span></h6></div>
+                    {% if about_me.freelance_available %}
+                        <div class="col-sm-6 py-2"><h6>Freelance: <span class="text-secondary">Oui</span></h6></div>
+                    {% else %}
+                        <div class="col-sm-6 py-2"><h6>Freelance: <span class="text-secondary">Non</span></h6></div>
+                    {% endif %}
+                </div>
+                <a href="mailto:masunil012@gmail.com" class="btn btn-outline-primary mr-4">Engagez-moi</a>
+                <a href="" class="btn btn-outline-primary">En savoir plus</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- About End (French) -->
+{% endif %}

@@ -1,0 +1,69 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+{% autoescape off %}
+
+  <div class="dashboard-main-body">
+    <form method="post">
+        {% csrf_token %}
+    <div class="row gy-4">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h1 class="card-title mb-0">Predict Popularity of a song</h1>
+          </div>
+          <div class="card-body">
+            <div class="row gy-3">
+              <div class="col-6">
+                <label class="form-label">Name</label>
+                <input type="text" name="name" required class="form-control" placeholder="Name of a song">
+              </div>
+              <div class="col-6">
+                <label class="form-label">Speechniness of a song</label>
+                <input type="number" name="speechiness" required class="form-control" placeholder="Speechniness of a song">
+              </div>
+              <div class="col-6">
+                <label class="form-label">Loudness of a song</label>
+                <input type="number" class="form-control flex-grow-1" name="loudness" required placeholder="Loudness of a song">
+              </div>
+                <div class="col-6">
+                <label class="form-label">Artists of a song</label>
+                <input type="number" class="form-control flex-grow-1" name="artists" required placeholder="Artists of a song">
+              </div>
+              <div class="col-6">
+                <label class="form-label">Energy</label>
+                <input type="number" name="energy" required class="form-control" placeholder="Energy level of  song">
+              </div>
+              <div class="col-6">
+                <label class="form-label">Danceability</label>
+                <input type="number" name="danceability" required class="form-control" placeholder="Danceability of song">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="row gy-3">
+
+
+
+              <button class="btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-8 mt-24 pb-8" type="submit">Predict</button>
+              {% if predict_spotify %}
+                <p class="prediction">Predicted Popularity Of a song:  {{ predict_spotify }}</p>
+              {% endif %}
+              {% if error %}
+                <p class="error">Error: {{ error }}</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </form>
+  </div>
+
+{% endautoescape %}
+{% endblock %}

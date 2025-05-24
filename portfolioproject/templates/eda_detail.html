@@ -1,0 +1,140 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+{% autoescape off %}
+
+<div class="dashboard-main-body">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
+
+            <h6 class="fw-semibold mb-0">{{ eda.project.title }} </h6>
+            <ul class="d-flex align-items-center gap-2">
+  </ul>
+</div>
+
+
+        <div class="row gy-4">
+            {% for eda in eda_lists %}
+            {% if eda.col_size == 'col-6' %}
+            <div class="col-md-6 col-lg-6">
+                <div class="card h-100 p-0">
+                    <div class="card-header border-bottom bg-base py-16 px-24">
+                        <h6 class="text-lg fw-semibold mb-0"> {{ eda.title }} </h6>
+                    </div>
+                    <div class="card-body p-24">
+                         <img src="{{ eda.img.url }}" alt="EDA Analysis Image" class="img-fluid rounded shadow" style="max-height: 400px;">
+                        <div id="columnChart" class=""></div>
+                    </div>
+                    <div class="card-body p-24">
+                    <div class="d-flex flex-wrap align-items-center gap-3">
+                    <div class="dropdown">
+                            <button class="btn btn-primary-600 not-active px-18 py-11 dropdown-toggle toggle-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false"> Analysis </button>
+                            <ul class="dropdown-menu">
+                                <p>{{ eda.analysis_details }}</p>
+                             </ul>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-primary-600 not-active px-18 py-11 dropdown-toggle toggle-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false"> Insight </button>
+                            <ul class="dropdown-menu">
+                                <p>{{ eda.insights }}</p>
+                                                         </ul>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            {% elif eda.col_size == 'col-12' %}
+            <div class="col-md-12">
+                <div class="card h-100 p-0">
+                    <div class="card-header border-bottom bg-base py-16 px-24">
+                        <h6 class="text-lg fw-semibold mb-0"> {{ eda.project.title }} </h6>
+                    </div>
+                    <div class="card-body p-24">
+                         <img src="{{ eda.img.url }}" alt="EDA Analysis Image" class="img-fluid rounded shadow" style="max-height: 400px;">
+                        <div id="columnChart" class=""></div>
+                    </div>
+                    <div class="card-body p-24">
+                    <div class="d-flex flex-wrap align-items-center gap-3">
+                    <div class="dropdown">
+                            <button class="btn btn-primary-600 not-active px-18 py-11 dropdown-toggle toggle-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false"> Analysis </button>
+                            <ul class="dropdown-menu">
+                                <p>{{ eda.analysis_details }}</p>
+                             </ul>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-primary-600 not-active px-18 py-11 dropdown-toggle toggle-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false"> Insight </button>
+                            <ul class="dropdown-menu">
+                                <p>{{ eda.insights }}</p>
+                                                         </ul>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            {% elif eda.col_size == 'col-4' %}
+            <div class="col-md-4">
+                <div class="card h-100 p-0">
+                    <div class="card-header border-bottom bg-base py-16 px-24">
+                        <h6 class="text-lg fw-semibold mb-0"> {{ eda.project.title }} </h6>
+                    </div>
+                    <div class="card-body p-24">
+                         <img src="{{ eda.img.url }}" alt="EDA Analysis Image" class="img-fluid rounded shadow" style="max-height: 400px;">
+                        <div id="columnChart" class=""></div>
+                    </div>
+                    <div class="card-body p-24">
+                    <div class="d-flex flex-wrap align-items-center gap-3">
+                    <div class="dropdown">
+                            <button class="btn btn-primary-600 not-active px-18 py-11 dropdown-toggle toggle-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false"> Analysis </button>
+                            <ul class="dropdown-menu">
+                                <p>{{ eda.analysis_details }}</p>
+                             </ul>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-primary-600 not-active px-18 py-11 dropdown-toggle toggle-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false"> Insight </button>
+                            <ul class="dropdown-menu">
+                                <p>{{ eda.insights }}</p>
+                                                         </ul>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-md-6">
+                <div class="card h-100 p-0">
+                    <div class="card-header border-bottom bg-base py-16 px-24">
+                        <h6 class="text-lg fw-semibold mb-0"> {{ eda.title }} </h6>
+                    </div>
+                    <div class="card-body p-24">
+                         <img src="{{ eda.img.url }}" alt="EDA Analysis Image" class="img-fluid rounded shadow" style="max-height: 400px;">
+                        <div id="columnChart" class=""></div>
+                    </div>
+                    <div class="card-body p-24">
+                    <div class="d-flex flex-wrap align-items-center gap-3">
+                    <div class="dropdown">
+                            <button class="btn btn-primary-600 not-active px-18 py-11 dropdown-toggle toggle-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false"> Analysis </button>
+                            <ul class="dropdown-menu">
+                                <p>{{ eda.analysis_details }}</p>
+                             </ul>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-primary-600 not-active px-18 py-11 dropdown-toggle toggle-icon" type="button" data-bs-toggle="dropdown" aria-expanded="false"> Insight </button>
+                            <ul class="dropdown-menu">
+                                <p>{{ eda.insights }}</p>
+                                                         </ul>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+
+{% endif %}
+                {% endfor %}
+        </div>
+
+
+
+    </div>
+
+ {% endautoescape %}
+{% endblock %}

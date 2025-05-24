@@ -1,0 +1,210 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+{% autoescape off %}
+
+  <div class="dashboard-main-body">
+    <form method="post">
+        {% csrf_token %}
+    <div class="row gy-4">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-header">
+            <h1 class="card-title mb-0">Predict Salary</h1>
+          </div>
+          <div class="card-body">
+            <div class="row gy-3">
+              <div class="col-6">
+                <label class="form-label">Age</label>
+                <input type="number" name="AgeGroup" required class="form-control">
+              </div>
+              <div class="col-6">
+                <label class="form-label">Experience in years</label>
+                <input type="number" name="Experience" required class="form-control" placeholder="Experience in years">
+              </div>
+              <div class="col-6">
+                <label class="form-label">Special Projects Count</label>
+                <input type="number" class="form-control flex-grow-1" name="SpecialProjectsCount" required placeholder="Special Projects Count">
+              </div>
+              <div class="col-6">
+                <label class="form-label">Department</label>
+                <select class="form-control" name="DeptID" required>
+                      <option value="0">Admin Offices</option>
+                      <option value="1">Executive Office</option>
+                      <option value="2">IT/IS</option>
+                      <option value="3">Production</option>
+                      <option value="5">Software Engineering</option>
+                  </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label">Gender</label>
+                <select class="form-control" name="GenderID" required>
+                      <option value="0">Male</option>
+                      <option value="1">Female</option>
+                  </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label">Marital Status</label>
+                <select type="number" class="form-control" name="MaritalStatusID" required>
+                      <option value="0">Married</option>
+                      <option value="1">Single</option>
+                  </select>
+              </div>
+
+                <div class="col-6">
+                <label class="form-label">Marital Status</label>
+                <select class="form-control" name="MarriedID" required>
+                      <option value="0">Married</option>
+                      <option value="1">Single</option>
+                  </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label">Position</label>
+                <select type="number" class="form-control" name="Position" required>
+                      <option value="1">Accountant I</option>
+                      <option value="2">Administrative Assistant</option>
+                      <option value="3">Area Sales Manager</option>
+                      <option value="4">BI Developer</option>
+                      <option value="5">BI Director</option>
+                      <option value="6">CIO</option>
+                      <option value="7">Data Analyst</option>
+                      <option value="8">Data Architect</option>
+                      <option value="9">Database Administrator</option>
+                      <option value="10">Director of Operations</option>
+                      <option value="11">Director of Sales</option>
+                      <option value="12">Enterprise Architect</option>
+                      <option value="13">IT Director</option>
+                      <option value="14">IT Manager / DB</option>
+                      <option value="15">IT Manager / Infra</option>
+                      <option value="16">IT Manager / Support</option>
+                      <option value="17">IT Support</option>
+                      <option value="18">Network Engineer</option>
+                      <option value="19">President & CEO</option>
+                      <option value="20">Principal Data Architect</option>
+                      <option value="21">Production Manager</option>
+                      <option value="23">Production Technician I</option>
+                      <option value="24">Production Technician II</option>
+                      <option value="25">Sales Manager</option>
+                      <option value="26">Senior BI Developer</option>
+                      <option value="27">Shared Services Manager</option>
+                      <option value="28">Software Engineer</option>
+                      <option value="29">Software Engineering Manager</option>
+                      <option value="30">Sr. Accountant</option>
+                      <option value="31">Sr. DBA</option>
+                      <option value="32">Sr. Network Engineer</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="row gy-3">
+              <div class="col-6">
+                <label class="form-label">Race</label>
+                <select type="number" class="form-control" name="CitizenDesc">
+                        <option value="0">American Indian or Alaska Native</option>
+                        <option value="1">Asian</option>
+                        <option value="2">Black or African American</option>
+                        <option value="3">Hispanic</option>
+                        <option value="4">Two or more races</option>
+                        <option value="5">White</option>
+                </select>
+              </div>
+                <div class="col-6">
+                <label class="form-label">Perf Score ID</label>
+                <select type="number" class="form-control" name="PerfScoreID" required>
+                    <option value="0">Employed</option>
+                    <option value="1">Unemployed</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label">Performance Score</label>
+                  <input type="number" class="form-control" name="PerformanceScore" required>
+
+<!--                <select type="number" class="form-control" name="PerfScoreID" required>-->
+<!--                    <option value="1">Exceeds</option>-->
+<!--                    <option value="2">Fully Meets</option>-->
+<!--                    <option value="3">Needs Improvement</option>-->
+<!--                    <option value="4">PIP</option>-->
+<!--                </select>-->
+              </div>
+
+              <div class="col-6">
+                <label class="form-label">Employment Status</label>
+                <select type="number" class="form-control" name="EmpStatusID" required>
+                    <option value="0">Employed</option>
+                    <option value="1">Unemployed</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label">Career Break</label>
+                <input type="number" name="carrierbreak" required class="form-control" placeholder="Career Break">
+              </div>
+              <div class="col-6">
+                <label class="form-label">Engagement Survey</label>
+                <input type="number" name="EngagementSurvey" required class="form-control" placeholder="Engagement Survey">
+              </div>
+              <div class="col-6">
+                <label class="form-label">Attend Diversity Job Fairs</label>
+                <select type="number" class="form-control" name="FromDiversityJobFairID" required>
+                    <option value="0">Yes</option>
+                    <option value="1">No</option>
+                </select>
+              </div>
+
+
+                <div class="col-6">
+                <label class="form-label">State</label>
+               <select type="number" class="form-control" name="State" required>
+    <option value="">Select a State</option>
+    <option value="1">MA</option>
+    <option value="2">TX</option>
+    <option value="3">CT</option>
+    <option value="4">VA</option>
+    <option value="5">VT</option>
+    <option value="6">AL</option>
+    <option value="7">WA</option>
+    <option value="8">CA</option>
+    <option value="9">OH</option>
+    <option value="10">IN</option>
+    <option value="11">TN</option>
+    <option value="12">NH</option>
+    <option value="13">RI</option>
+    <option value="14">PA</option>
+    <option value="15">CO</option>
+    <option value="16">NY</option>
+    <option value="17">UT</option>
+    <option value="18">GA</option>
+    <option value="19">FL</option>
+    <option value="20">NC</option>
+    <option value="21">KY</option>
+    <option value="22">ID</option>
+    <option value="23">NV</option>
+    <option value="24">MT</option>
+    <option value="25">OR</option>
+    <option value="26">ND</option>
+    <option value="27">AZ</option>
+    <option value="28">ME</option>
+</select>
+              </div>
+              <button class="btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-8 mt-24 pb-8" type="submit">Predict</button>
+              {% if prediction %}
+                <p class="prediction">Predicted Salary: INR {{ prediction }}</p>
+              {% endif %}
+              {% if error %}
+                <p class="error">Error: {{ error }}</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </form>
+  </div>
+
+{% endautoescape %}
+{% endblock %}

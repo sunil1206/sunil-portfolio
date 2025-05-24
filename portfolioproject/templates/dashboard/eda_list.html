@@ -1,0 +1,123 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+{% autoescape off %}
+<div class="dashboard-main-body">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
+  <h6 class="fw-semibold mb-0">Dashboard</h6>
+  <ul class="d-flex align-items-center gap-2">
+    <li class="fw-medium">
+      <a href="index.html" class="d-flex align-items-center gap-1 hover-text-primary">
+        <iconify-icon icon="solar:home-smile-angle-outline" class="icon text-lg"></iconify-icon>
+        Dashboard
+      </a>
+    </li>
+    <li>-</li>
+    <li class="fw-medium">AI</li>
+  </ul>
+</div>
+  {% for project in projects %}
+
+    <div class="row row-cols-xxxl-5 row-cols-lg-3 row-cols-sm-2 row-cols-1 gy-4">
+      {% for eda in eda_list %}
+                {% if eda.project.id == project.id %}
+      <div class="col">
+        <div class="card shadow-none border bg-gradient-start-1 h-100">
+          <div class="card-body p-20">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+              <div>
+                <p class="fw-medium text-primary-light mb-1">{{ eda.analysis_type }}</p>
+                <h6 class="mb-0">
+                  <a href="{% url 'eda_detail' eda_id=eda.id %}" class="text-blue-500 hover:underline">
+        {{ eda.title|truncatewords:10 }}
+    </a></h6>
+
+              </div>
+              <div class="w-50-px h-50-px bg-cyan rounded-circle d-flex justify-content-center align-items-center">
+                <iconify-icon icon="gridicons:multiple-users" class="text-white text-2xl mb-0"></iconify-icon>
+              </div>
+            </div>
+          </div>
+        </div><!-- card end -->
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+  {% endfor %}
+
+</div>
+
+<div class="dashboard-main-body">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
+
+            <h6 class="fw-semibold mb-0">EDA Analysis</h6>
+            <ul class="d-flex align-items-center gap-2">
+  </ul>
+</div>
+
+
+        <div class="row gy-4">
+            {% for eda in eda_list %}
+            {% if eda.analysis_type == 'univariate' %}
+            <div class="col-md-6">
+                <div class="card h-100 p-0">
+                    <div class="card-header border-bottom bg-base py-16 px-24">
+                        <h6 class="text-lg fw-semibold mb-0"> {{ eda.project.title }} </h6>
+                    </div>
+                    <div class="card-body p-24">
+                         <img src="{{ eda.img.url }}" alt="EDA Analysis Image" class="img-fluid rounded shadow" style="max-height: 400px;">
+                        <div id="columnChart" class=""></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 p-0">
+                    <div class="card-header border-bottom bg-base py-16 px-24">
+                        <h6 class="text-lg fw-semibold mb-0">Analysis Details</h6>
+                        <p>{{ eda.analysis_details }}</p>
+                    </div>
+                    <div class="card-body p-24">
+                        <div id="columnGroupBarChart" class="">
+                            <h6 class="text-lg fw-semibold mb-0">Insights</h6>
+                        <p> {{ eda.insights }} </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% elif eda.analysis_type == 'bivariate' %}
+            <div class="col-md-8">
+                <div class="card h-100 p-0">
+                    <div class="card-header border-bottom bg-base py-16 px-24">
+                        <h6 class="text-lg fw-semibold mb-0"> {{ eda.project.title }} </h6>
+                    </div>
+                    <div class="card-body p-24">
+                         <img src="{{ eda.img.url }}" alt="EDA Analysis Image" class="img-fluid rounded shadow" style="max-height: 400px;">
+                        <div id="columnChart" class=""></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 p-0">
+                    <div class="card-header border-bottom bg-base py-16 px-24">
+                        <h6 class="text-lg fw-semibold mb-0">Analysis Details</h6>
+                        <p>{{ eda.analysis_details }}</p>
+                    </div>
+                    <div class="card-body p-24">
+                        <div id="columnGroupBarChart" class="">
+                            <h6 class="text-lg fw-semibold mb-0">Insights</h6>
+                        <p> {{ eda.insights }} </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+{% endif %}
+                {% endfor %}
+        </div>
+
+
+
+    </div>
+ {% endautoescape %}
+  {% endblock %}

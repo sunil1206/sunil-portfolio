@@ -1,0 +1,45 @@
+{% extends 'python/base.html' %}
+{% load static %}
+{% block content %}
+<div class="dashboard-main-body">
+    <div class="row gy-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="card-title mb-0">Swap Case Converter</h1>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <textarea name="input_text" class="form-control mb-3" rows="5" placeholder="Enter your text here...">{{ request.POST.input_text }}</textarea>
+                        <button type="submit" class="btn btn-success w-100">Convert Case</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {% if result %}
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Swapped Result</h4>
+                </div>
+                <div class="card-body">
+                    <p class="border p-3" style="white-space: pre-wrap;">{{ result }}</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="card-title mb-0">Python Code</h1>
+                </div>
+                <div class="card-body">
+<!--                    <pre class="bg-light p-3 border rounded" style="white-space: pre-wrap;">{{ projects.code|safe }}</pre>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

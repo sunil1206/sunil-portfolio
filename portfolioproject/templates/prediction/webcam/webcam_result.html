@@ -1,0 +1,5 @@
+<h2>Prediction from Webcam:</h2>
+{% if label %}
+  <p><strong>Class:</strong> {{ label }}</p>
+{% endif %}
+<a href="{% url 'webcam_predict' %}">Back</a>

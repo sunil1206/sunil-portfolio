@@ -1,0 +1,35 @@
+<form method="POST">
+    {% csrf_token %}
+
+    <input type="number" name="resid_area" placeholder="Residential Area" required step="any">
+    <input type="number" name="air_qual" placeholder="Air Quality" required step="any">
+    <input type="number" name="room_num" placeholder="Number of Rooms" required step="any">
+    <input type="number" name="age" placeholder="Age of House" required step="any">
+    <input type="number" name="teachers" placeholder="Teachers Nearby" required step="any">
+    <input type="number" name="poor_prop" placeholder="Poverty Rate" required step="any">
+    <input type="number" name="n_hos_beds" placeholder="Number of Hospital Beds" required step="any">
+    <input type="number" name="n_hot_rooms" placeholder="Hot Rooms" required step="any">
+    <input type="number" name="rainfall" placeholder="Rainfall" required step="any">
+    <input type="number" name="parks" placeholder="Number of Parks" required step="any">
+    <input type="number" name="avg_dist" placeholder="Average Distance to City Center" required step="any">
+
+    <label>Airport:</label>
+    <input type="radio" name="airport_YES" value="1" required> Yes
+    <input type="radio" name="airport_YES" value="0" required> No
+
+    <label>Waterbody:</label>
+    <input type="radio" name="waterbody_Lake and River" value="1" required> Lake and River
+    <input type="radio" name="waterbody_Lake and River" value="0" required> None
+
+    <input type="radio" name="waterbody_None" value="1" required> No Waterbody
+    <input type="radio" name="waterbody_None" value="0" required> Some Waterbody
+
+    <input type="radio" name="waterbody_River" value="1" required> River
+    <input type="radio" name="waterbody_River" value="0" required> No River
+
+    <button type="submit">Predict House Price</button>
+</form>
+
+{% if prediction %}
+    <h2>Predicted House Price: {{ prediction }}</h2>
+{% endif %}

@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha384-rREIfNUcC+1JFO9PiQcECBByZOMIIm4F5Gz4XJjd/d5M1f7qAKW8fjEAgbDkJl4u" crossorigin="anonymous">
+
+<!-- Services Start -->
+<div class="container-fluid pt-5" id="service">
+    <div class="container">
+        <div class="position-relative d-flex align-items-center justify-content-center">
+            {% if request.path == '/' %}
+                <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #dee2e6;">Service</h1>
+                <h1 class="position-absolute text-uppercase text-primary">My Services</h1>
+            {% else %}
+                <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #dee2e6;">Services</h1>
+                <h1 class="position-absolute text-uppercase text-primary">Mes Services</h1>
+            {% endif %}
+        </div>
+        <div class="row pb-3">
+            {% for service in services %}
+                <div class="col-lg-4 col-md-6 text-center mb-5">
+                    <div class="d-flex align-items-center justify-content-center mb-4">
+                        <i class="fab fa-2x {{ service.icon_class }} fa-2x service-icon bg-primary text-white mr-3"></i>
+                        <h4 class="font-weight-bold m-0">
+                            {% if request.path == '/' %}
+                                {{ service.title }}
+                            {% else %}
+                                {{ service.title_fr }}
+                            {% endif %}
+                        </h4>
+                    </div>
+                    <p>
+                        {% if request.path == '/' %}
+                            {{ service.description }}
+                        {% else %}
+                            {{ service.description_fr }}
+                        {% endif %}
+                    </p>
+                    <a class="border-bottom border-primary text-decoration-none" href="#">
+                        {% if request.path == '/' %}
+
+                        {% else %}
+
+                        {% endif %}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<!-- Services End -->

@@ -1,0 +1,62 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="dashboard-main-body">
+
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
+        <h6 class="fw-semibold mb-0">ML Model Details</h6>
+        <ul class="d-flex align-items-center gap-2">
+        </ul>
+    </div>
+
+        <div class="row gy-4">
+            <div class="col-md-6">
+                <div class="card h-100 p-0">
+                    <div class="card-header border-bottom bg-base py-16 px-24">
+                        <h6 class="text-lg fw-semibold mb-0">{{ ml_model.project.title }}</h6>
+                    </div>
+                    <div class="card-body p-24">
+                        <!-- Placeholder for ML Model Image -->
+                        {% if ml_model.img %}
+                            <img src="{{ ml_model.img.url }}" alt="ML Model Image" class="img-fluid rounded shadow" style="max-height: 400px;">
+                        {% else %}
+                         <div class="card-body p-24">
+                        <div id="modelPerformanceChart" class="">
+                            <h6 class="text-lg fw-semibold mb-0"> Insights</h6>
+                            <p>{{ ml_model.insights }}</p>
+                        </div>
+                    </div>
+<!--                            <img src="{% static 'images/default-mlmodel.png' %}" alt="Default ML Model Image" class="img-fluid rounded shadow" style="max-height: 400px;">-->
+                        {% endif %}
+                        <div id="mlModelChart" class=""></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 p-0">
+                    <div class="card-header border-bottom bg-base py-16 px-24">
+                        <h6 class="text-lg fw-semibold mb-0">Model Details</h6>
+<button type="button" class="btn btn-primary px-12 w-100 mt-24 pb-8" onclick="window.location.href='{% url 'predict_salary' %}'">
+    <strong>Prediction</strong>
+</button>
+<!--                        <p>{{ ml_model.training_details }}</p>-->
+                    </div>
+                    <div class="card-body p-24">
+                        <div id="modelPerformanceChart" class="">
+                            <h6 class="text-lg fw-semibold mb-0">Performance Metrics</h6>
+                            <p>{{ ml_model.evaluation_metrics }}</p>
+                        </div>
+                    </div>
+                    <div class="card-body p-24">
+                        <div id="modelPerformanceChart" class="">
+                            <h6 class="text-lg fw-semibold mb-0"> Insights</h6>
+                            <p>{{ ml_model.insights }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+{% endblock %}

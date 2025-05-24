@@ -1,0 +1,124 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+{% autoescape off %}
+<div class="dashboard-main-body">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
+
+            <h6 class="fw-semibold mb-0">Project Analysis</h6>
+            <ul class="d-flex align-items-center gap-2">
+  </ul>
+</div>
+
+<div class="row gy-4">
+        <div class="col-xxl-9 col-lg-8">
+            <div class="card h-100 p-0 radius-12">
+                <div class="card-body px-24 py-32">
+
+                    <div class="d-flex align-items-center justify-content-between mb-24">
+                        <div class="d-flex align-items-center">
+                            <img src="{{ project.image.url }}" alt="image" class="w-72-px h-72-px rounded-circle flex-shrink-0 me-12 overflow-hidden">
+                            <div class="flex-grow-1 d-flex flex-column">
+                                <h4 class="mb-4">{{ project.title }} <span class="text-md text-neutral-400 fw-semibold"></span> </h4>
+                              <span class="text-md mb-0 fw-medium text-neutral-500 d-block"></span>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-24">
+                            <div class="d-flex flex-column align-items-end">
+                                <div class="d-flex align-items-center gap-8 mb-4">
+                                    <h6 class="mb-0"></h6>
+<!--                                    <span class="text-sm fw-semibold rounded-pill bg-success-focus text-success-main border br-success px-8 py-4 line-height-1 d-flex align-items-center gap-1">-->
+<!--                                        <iconify-icon icon="bxs:up-arrow" class="text-xs"></iconify-icon>-->
+<!--                                    </span>-->
+                                </div>
+                                <div class="">
+                                    <span class="fw-semibold text-secondary-light text-sm"></span>
+                                    <span class="fw-semibold text-success-600 text-sm"></span>
+                                </div>
+                            </div>
+<!--                            <button type="button" class="star-btn w-48-px h-48-px d-flex justify-content-center align-items-center border radius-8 text-2xl text-neutral-400 text-hover-primary-600 line-height-1">-->
+<!--                                <i class="ri-star-line"></i>-->
+<!--                            </button>-->
+                        </div>
+                    </div>
+
+                    <h5 class="mb-16">About Project</h5>
+                    <p class="text-secondary-light"> {{ project.description }}
+                    </p>
+
+                    <h5 class="mb-16">About Dataset</h5>
+                    <h6 class="mb-16">{{ project.dataset_name }}</h6>
+                    <p class="text-secondary-light"> {{ project.dataset_description }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xxl-3 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body p-0">
+                    <div class="p-24 border-bottom">
+
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="pills-Buy" role="tabpanel" aria-labelledby="pills-Buy-tab" tabindex="0">
+                                <h6 class="mb-0">EDA</h6>
+                                <div class="">
+
+                                    <button type="button" class="btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-8 mt-24 pb-8" data-bs-toggle="modal" data-bs-target="#exampleModalEdit">
+{% for eda in eda_lists %}
+    {% if eda.project.id == project.id %}
+        {% if forloop.counter == 1 %}
+            <ul>
+                <li>
+                    <a href="{% url 'eda_detail' eda_id=eda.id %}">
+                        EDA
+                    </a>
+                </li>
+            </ul>
+        {% endif %}
+    {% endif %}
+{% endfor %}
+
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="p-24 border-bottom">
+
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="pills-Buy" role="tabpanel" aria-labelledby="pills-Buy-tab" tabindex="0">
+                                <h6 class="mb-0">ML MODEL</h6>
+                                <div class="">
+
+                                    <button type="button" class="btn btn-primary text-sm btn-sm px-12 py-16 w-100 radius-8 mt-24 pb-8" data-bs-toggle="modal" data-bs-target="#exampleModalEdit">
+
+
+                                        {% for ml in ml_models %}
+    {% if ml.project.id == project.id %}
+        {% if forloop.first %}
+            <ul>
+                <li>
+<!--                    <a href="{% url 'mlmodel_detail' model_id=ml.id %}">-->
+                        <a href="{{ ml.training_details }}">
+                        ML MODEL
+                    </a>
+                </li>
+            </ul>
+        {% endif %}
+    {% endif %}
+{% endfor %}
+
+
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+ {% endautoescape %}
+{% endblock %}

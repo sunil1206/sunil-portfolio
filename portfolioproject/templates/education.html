@@ -1,0 +1,51 @@
+<!-- Qualification Start -->
+<div class="container-fluid py-5" id="qualification">
+    <div class="container">
+        <div class="position-relative d-flex align-items-center justify-content-center">
+            {% if request.path == '/' %}
+                <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #dee2e6;">Quality</h1>
+                <h1 class="position-absolute text-uppercase text-primary">Education & Experience</h1>
+            {% else %}
+                <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #dee2e6;">Qualité</h1>
+                <h1 class="position-absolute text-uppercase text-primary">Éducation & Expérience</h1>
+            {% endif %}
+        </div>
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                {% if request.path == '/' %}
+                    <h3 class="mb-4">My Education</h3>
+                {% else %}
+                    <h3 class="mb-4">Mon Éducation</h3>
+                {% endif %}
+                <div class="border-left border-primary pt-2 pl-4 ml-2">
+                    {% for item in education %}
+                        <div class="position-relative mb-4">
+                            <i class="far fa-dot-circle text-primary position-absolute" style="top: 2px; left: -32px;"></i>
+                            <h5 class="font-weight-bold mb-1">{{ item.degree }}</h5>
+                            <p class="mb-2"><strong>{{ item.institution }}</strong> | <small>{{ item.date_range }}</small></p>
+                            <p>{{ item.description }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                {% if request.path == '/' %}
+                    <h3 class="mb-4">My Experience</h3>
+                {% else %}
+                    <h3 class="mb-4">Mon Expérience</h3>
+                {% endif %}
+                <div class="border-left border-primary pt-2 pl-4 ml-2">
+                    {% for item in experience %}
+                        <div class="position-relative mb-4">
+                            <i class="far fa-dot-circle text-primary position-absolute" style="top: 2px; left: -32px;"></i>
+                            <h5 class="font-weight-bold mb-1">{{ item.position }}</h5>
+                            <p class="mb-2"><strong>{{ item.company }}</strong> | <small>{{ item.date_range }}</small></p>
+                            <p>{{ item.description }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Qualification End -->
