@@ -4,10 +4,16 @@ from django.shortcuts import render
 
 # Create your views here.
 from PythONFire.models import PythonProject
+from analytics.models import DataScienceProject
 
+
+def project_list_view(request):
+    python_projects = PythonProject.objects.all()
+    projects = DataScienceProject.objects.all()
+    return render(request, 'python/python_list.html', {'projects': projects,'python_projects':python_projects})
 
 def swapcase_view(request):
-    projects = projects = PythonProject.objects.all().order_by('popularity')
+    projects = PythonProject.objects.all().order_by('popularity')
 
     result = ""
     if request.method == "POST":
