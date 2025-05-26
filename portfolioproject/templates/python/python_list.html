@@ -1,0 +1,48 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+<div class="dashboard-main-body">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-24">
+  <h6 class="fw-semibold mb-0">PYTHON HACK</h6>
+  <ul class="d-flex align-items-center gap-2">
+    <li class="fw-medium">
+      <a href="{% url 'index' %}" class="d-flex align-items-center gap-1 hover-text-primary">
+        <iconify-icon icon="solar:home-smile-angle-outline" class="icon text-lg"></iconify-icon>
+        Dashboard
+      </a>
+    </li>
+    <li>-</li>
+    <li class="fw-medium">PYTHON</li>
+  </ul>
+</div>
+
+<div class="row row-cols-xxxl-5 row-cols-lg-3 row-cols-sm-2 row-cols-1 gy-4">
+  {% for project in python_projects %}
+  <div class="col">
+    <div class="card shadow-none border bg-gradient-start-2 h-100">
+      <div class="card-body p-20">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+          <div>
+            <p class="fw-medium text-primary-light mb-1">Project Name</p>
+            <h6 class="mb-0">
+  <a href="{{ project.url|default:'#' }}" target="_blank" class="text-decoration-none">
+    {{ project.name }}
+  </a>
+</h6>
+
+          </div>
+          <div class="w-50-px h-50-px bg-purple rounded-circle d-flex justify-content-center align-items-center">
+            <iconify-icon icon="fa-solid:award" class="text-white text-2xl mb-0"></iconify-icon>
+          </div>
+        </div>
+        <p class="fw-medium text-sm text-primary-light mt-12 mb-0 d-flex align-items-start flex-column gap-1">
+<!--          <span><strong>Popularity:</strong> {{ project.popularity }}</span>-->
+          <span><strong>Created:</strong> {{ project.created_date|date:"Y-m-d" }}</span>
+        </p>
+      </div>
+    </div><!-- card end -->
+  </div>
+  {% endfor %}
+</div>
+</div>
+{% endblock %}
