@@ -27,6 +27,7 @@ sitemaps = {
 from portfolioproject import settings
 
 urlpatterns = [
+    path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls),
     path('',include('portfolio.urls')),
     path('fr/',include('french.urls')),
