@@ -14,7 +14,6 @@ def project_list_view(request):
 
 def swapcase_view(request):
     projects = PythonProject.objects.all().order_by('popularity')
-
     result = ""
     if request.method == "POST":
         input_text = request.POST.get("input_text", "")
@@ -27,3 +26,18 @@ def swapcase_view(request):
             else:
                 result += char  # Leave digits, punctuation, etc.
     return render(request, "python/1/swapcase.html", {"result": result,'projects':projects})
+
+def SplitandJoinstring(request):
+    projects = PythonProject.objects.all().order_by('popularity')
+    output = ""
+    input_string = ""
+    if request.method == 'POST':
+        input_string = request.POST.get("input_string", "")
+        words = input_string.split(" ")
+        output = '-'.join(words)
+    return render(request, "python/easy/splitandjoin.html", {
+        "input_string": input_string,
+        "output": output,
+        "projects": projects
+    })
+

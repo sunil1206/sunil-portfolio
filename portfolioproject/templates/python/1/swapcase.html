@@ -22,7 +22,7 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="mb-0">Swapped Result</h4>
+                    <h1 class="card-title mb-0">Swapped Result</h1>
                 </div>
                 <div class="card-body">
                     <p class="border p-3" style="white-space: pre-wrap;">{{ result }}</p>
@@ -30,13 +30,42 @@
             </div>
         </div>
         {% endif %}
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h1 class="card-title mb-0">Python Code</h1>
+        <div class="col-xxl-12">
+            <div class="card p-0 overflow-hidden position-relative radius-12 h-100">
+                <div class="card-header py-16 px-24 bg-base border border-end-0 border-start-0 border-top-0">
+                    <h6 class="text-lg mb-0">More Details</h6>
                 </div>
-                <div class="card-body">
-<!--                    <pre class="bg-light p-3 border rounded" style="white-space: pre-wrap;">{{ projects.code|safe }}</pre>-->
+                <div class="card-body p-24 pt-10">
+                    <ul class="nav focus-tab nav-pills mb-16" id="pills-tab-two" role="tablist">
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link fw-semibold text-primary-light radius-4 px-16 py-10 active" id="pills-focus-home-tab" data-bs-toggle="pill" data-bs-target="#pills-focus-home" type="button" role="tab" aria-controls="pills-focus-home" aria-selected="true">Task</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link fw-semibold text-primary-light radius-4 px-16 py-10" id="pills-focus-details-tab" data-bs-toggle="pill" data-bs-target="#pills-focus-details" type="button" role="tab" aria-controls="pills-focus-details" aria-selected="false">Code</button>
+                        </li>
+
+                    </ul>
+                    <div class="tab-content" id="pills-tab-twoContent">
+                        <div class="tab-pane fade show active" id="pills-focus-home" role="tabpanel" aria-labelledby="pills-focus-home-tab" tabindex="0">
+                            <div>
+                                <h6 class="text-lg mb-8">🔄 Swap Case</h6>
+                                <p class="text-secondary-light mb-16"><strong>Function:</strong> Write a function <code>swap_case(s)</code> that takes a string and returns it with all lowercase letters converted to uppercase and all uppercase letters converted to lowercase.</p>
+        <p class="text-secondary-light mb-16"><strong>Input:</strong> A single string <code>s</code> (1 ≤ len(s) ≤ 1000)</p>
+        <p class="text-secondary-light mb-16"><strong>Output:</strong> The modified string with swapped cases.</p>
+        <p class="text-secondary-light mb-0"><strong>Example:</strong><br>
+        <code>Input:</code> HackerRank.com presents "Pythonist 2".<br>
+        <code>Output:</code> hACKERrANK.COM PRESENTS "pYTHONIST 2".</p>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="pills-focus-details" role="tabpanel" aria-labelledby="pills-focus-details-tab" tabindex="0">
+                            <div>
+                                <h6 class="text-lg mb-8">Code</h6>
+                                <pre><code></code></pre>
+
+                                <p class="text-secondary-light mb-16"> </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
