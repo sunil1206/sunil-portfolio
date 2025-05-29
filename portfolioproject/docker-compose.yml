@@ -1,25 +1,38 @@
-version: '3.8'
-
 services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx/portfolio.conf:/etc/nginx/conf.d/portfolio.conf
+      - ./nginx/ssl:/etc/letsencrypt
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - django_app
+      - fastapi_main
+      - fastapi_spam
+    restart: always
+
   django_app:
     build:
-      context: ./portfolioproject
-    ports:
-      - "8000:8000"
+      context: ./
+    expose:
+      - "8000"
     restart: always
 
   fastapi_main:
     build:
       context: ./fastapi_app
-    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]
-    ports:
-      - "8001:8001"
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8002"]
+    expose:
+      - "8002"
     restart: always
 
   fastapi_spam:
     build:
       context: ./fastapi_app
-    command: ["uvicorn", "spam:app", "--host", "0.0.0.0", "--port", "8002"]
-    ports:
-      - "8002:8002"
+    command: ["uvicorn", "spam:app", "--host", "0.0.0.0", "--port", "8001"]
+    expose:
+      - "8001"
     restart: always
