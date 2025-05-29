@@ -59,7 +59,7 @@ def predict_from_fastapi(request):
         image = request.FILES['image']
         try:
             response = requests.post(
-                'http://127.0.0.1:8001/predict',
+                'http://127.0.0.1:8002/predict',
                 files={'file': (image.name, image.read(), image.content_type)}
             )
             result = response.json()
