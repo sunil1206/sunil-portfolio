@@ -1,38 +1,13 @@
-services:
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    volumes:
-      - ./nginx/portfolio.conf:/etc/nginx/conf.d/portfolio.conf
-      - ./nginx/ssl:/etc/letsencrypt
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - django_app
-      - fastapi_main
-      - fastapi_spam
-    restart: always
+FROM python:3.10-slim
 
-  django_app:
-    build:
-      context: ./
-    expose:
-      - "8000"
-    restart: always
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-  fastapi_main:
-    build:
-      context: ./fastapi_app
-    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8002"]
-    expose:
-      - "8002"
-    restart: always
+WORKDIR /code
 
-  fastapi_spam:
-    build:
-      context: ./fastapi_app
-    command: ["uvicorn", "spam:app", "--host", "0.0.0.0", "--port", "8001"]
-    expose:
-      - "8001"
-    restart: always
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+CMD ["gunicorn", "portfolioproject.wsgi:application", "--bind", "0.0.0.0:8000"]
