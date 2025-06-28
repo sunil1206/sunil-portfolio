@@ -1,0 +1,129 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% block content %}
+<div class="dashboard-main-body">
+    <div class="row gy-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="card-title mb-0">Webcam Object Detection (YOLOv8)</h1>
+                </div>
+                <div class="card-body position-relative">
+                    <video id="video" width="640" height="480" autoplay playsinline style="border:1px solid #ccc;"></video>
+                    <canvas id="canvas" width="640" height="480" style="position:absolute; top:0; left:0;"></canvas>
+                    <button class="btn btn-primary w-100 mt-3" onclick="startDetection()">Start Detection</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Detected Objects</h5>
+                </div>
+                <div class="card-body" id="detected-images">
+                    <!-- Images will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const video = document.getElementById('video');
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const detectedImagesDiv = document.getElementById('detected-images');
+
+navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => { video.srcObject = stream; })
+    .catch(err => alert("Webcam access denied"));
+
+function startDetection() {
+    setInterval(() => {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        canvas.toBlob(async (blob) => {
+            const formData = new FormData();
+            formData.append("file", blob, "frame.jpg");
+
+            try {
+                const response = await fetch("http://localhost:8003/trash/", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    console.error("Error from FastAPI backend:", response.statusText);
+                    return;
+                }
+
+                const result = await response.json();
+                console.log("YOLO Predictions:", result);
+                drawBoxes(result.predictions);
+                showClassImages(result.predictions);
+            } catch (error) {
+                console.error("Fetch or prediction error:", error);
+            }
+        }, 'image/jpeg');
+    }, 1500);
+}
+
+function drawBoxes(predictions) {
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    ctx.lineWidth = 2;
+    ctx.font = "16px Arial";
+    ctx.strokeStyle = 'red';
+    ctx.fillStyle = 'red';
+    predictions.forEach(p => {
+        const [x1, y1, x2, y2] = p.box;
+        ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+        ctx.fillText(`Class: ${p.class} (${(p.confidence * 100).toFixed(1)}%)`, x1 + 5, y1 - 10);
+    });
+}
+
+function showClassImages(predictions) {
+    detectedImagesDiv.innerHTML = '';  // Clear previous
+
+    // Group by class, showing the highest confidence detection per class
+    const bestPerClass = {};
+    predictions.forEach(p => {
+        if (!bestPerClass[p.class] || p.confidence > bestPerClass[p.class].confidence) {
+            bestPerClass[p.class] = p;
+        }
+    });
+
+    Object.keys(bestPerClass).forEach(cls => {
+        const p = bestPerClass[cls];
+        const confidencePercent = (p.confidence * 100).toFixed(1);
+        const container = document.createElement('div');
+        container.className = "mb-3 text-center";
+
+        const img = document.createElement('img');
+        img.className = "img-fluid border p-1 mb-1";
+        img.style.maxHeight = "150px";
+
+        const label = document.createElement('div');
+        label.className = "fw-bold";
+        label.innerText = `Confidence: ${confidencePercent}%`;
+
+        if (parseInt(cls) === 0) {
+            img.src = "{% static 'mlmodel/trash/plastic.jpeg' %}";
+            img.alt = "Plastic";
+        } else if (parseInt(cls) === 1) {
+            img.src = "{% static 'mlmodel/trash/metal.png' %}";
+            img.alt = "Metal";
+        } else if (parseInt(cls) === 2) {
+            img.src = "{% static 'mlmodel/trash/paper.jpg' %}";
+            img.alt = "Paper";
+        } else {
+            return;
+        }
+
+        container.appendChild(img);
+        container.appendChild(label);
+        detectedImagesDiv.appendChild(container);
+    });
+}
+
+</script>
+{% endblock %}

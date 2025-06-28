@@ -105,3 +105,53 @@ import base64
 #             label = class_names[np.argmax(prediction)]
 #
 #     return render(request, 'prediction/webcam/webcam.html', {'label': label,'projects':projects})
+
+import base64
+import requests
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def trash_predict_view(request):
+    projects = DataScienceProject.objects.all()
+    label_data = []
+
+    if request.method == 'POST':
+        image_data = request.POST.get('image_data')
+        if image_data:
+            # Decode base64 to binary image
+            header, data = image_data.split(';base64,')
+            image_bytes = base64.b64decode(data)
+
+            # Send to FastAPI
+            files = {'file': ('webcam.jpg', image_bytes, 'image/jpeg')}
+            response = requests.post('http://127.0.0.1:8003/trash/', files=files)
+
+            if response.status_code == 200:
+                predictions = response.json().get('predictions', [])
+                label_data = predictions
+
+    return render(request, 'prediction/trash/webcam_trash_detection.html', {'label_data': label_data,'projects':projects})
+
+@csrf_exempt
+def plant_disease_predict_view(request):
+    label_data_plant_disease = []
+
+    if request.method == 'POST':
+        image_data = request.POST.get('image_data')
+        if image_data:
+            # Decode base64 to binary image
+            header, data = image_data.split(';base64,')
+            image_bytes = base64.b64decode(data)
+
+            # Send to FastAPI plant disease detection endpoint
+            files = {'file': ('webcam.jpg', image_bytes, 'image/jpeg')}
+            response_plant_disease = requests.post('http://127.0.0.1:8003/plant-disease/', files=files)
+
+            if response_plant_disease.status_code == 200:
+                predictions_plant_disease = response_plant_disease.json().get('predictions', [])
+                label_data_plant_disease = predictions_plant_disease
+
+    return render(request, 'prediction/plant_disease/plant_disease_detection.html', {
+        'label_data_plant_disease': label_data_plant_disease,
+    })
