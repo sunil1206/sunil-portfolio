@@ -5,10 +5,9 @@ from django.views.decorators.csrf import csrf_exempt
 from keras.models import load_model
 from PIL import Image
 import numpy as np
-#
+
 # Load the model once
 from analytics.models import DataScienceProject
-#
 # MODEL_PATH = os.path.join('cifar', 'models', 'cifar10_model.h5')
 # try:
 #     model = load_model(MODEL_PATH, compile=False)
@@ -16,35 +15,34 @@ from analytics.models import DataScienceProject
 # except Exception as e:
 #     model = None
 #     load_error = str(e)
-#
-#
+
 # model = load_model(MODEL_PATH)
-#
+
 # class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer',
 #                'dog', 'frog', 'horse', 'ship', 'truck']
-#
+
 # def predict_image(request):
 #     projects = DataScienceProject.objects.all()
 #     label = None
 #     if request.method == 'POST' and request.FILES.get('image'):
 #         img_file = request.FILES['image']
-#
+
 #         # Save uploaded file temporarily and get full path
 #         temp_file_path = default_storage.save('temp/temp.jpg', img_file)
 #         temp_full_path = default_storage.path(temp_file_path)
-#
+
 #         # Open and preprocess image
 #         img = Image.open(temp_full_path).convert('RGB').resize((32, 32))
 #         img = np.array(img).astype('float32') / 255.0
 #         img = np.expand_dims(img, axis=0)
-#
+
 #         # Predict
 #         prediction = model.predict(img)
 #         label = class_names[np.argmax(prediction)]
 #
 #         # Optionally delete the temp file after prediction
 #         default_storage.delete(temp_file_path)
-#
+
 #     return render(request, 'prediction/prediction_cifar.html', {'label': label,'projects':projects})
 import requests
 from django.shortcuts import render
@@ -155,3 +153,39 @@ def plant_disease_predict_view(request):
     return render(request, 'prediction/plant_disease/plant_disease_detection.html', {
         'label_data_plant_disease': label_data_plant_disease,
     })
+
+
+import requests
+from django.shortcuts import render
+from django.http import JsonResponse
+
+def generative_predict_view(request):
+    generative_image = []
+
+    if request.method == 'POST':
+        prompt = request.POST.get('prompt')
+        resolution = request.POST.get('resolution', '1024x1024')
+        guidance_scale = float(request.POST.get('guidance_scale', 7.5))
+        num_images = int(request.POST.get('num_images', 4))
+        steps = int(request.POST.get('steps', 30))
+
+        # Prepare data to send to FastAPI
+        data = {
+            'prompt': prompt,
+            'resolution': resolution,
+            'guidance_scale': guidance_scale,
+            'num_images': num_images,
+            'steps': steps
+        }
+
+        # Send POST request to FastAPI
+        response = requests.post('http://127.0.0.1:8003/generate-images/', json=data)
+
+        if response.status_code == 200:
+            predictions = response.json().get('images', [])
+            generative_image = predictions
+
+    return render(request, 'prediction/diffusion/diffusion.html', {
+        'generative_image': generative_image,
+    })
+

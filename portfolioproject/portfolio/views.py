@@ -2,7 +2,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
 
 # Create your views here.
-from portfolio.models import AboutMe, Skill, Qualification, Experience, Portfolio, Service
+from portfolio.models import AboutMe, Skill, Qualification, Experience, Portfolio, Service, Tools
 
 
 def index(request):
@@ -13,6 +13,16 @@ def index(request):
     portfolio_items = Portfolio.objects.order_by('-popularity')
     category_choices = Portfolio.CATEGORY_CHOICES
     services = Service.objects.all()
+    tools = Tools.objects.order_by('-popularity')
+
+
+    # Group tools by category
+    tools_by_category = {
+        "Programming Languages": tools.filter(category='programming'),
+        "DevOps": tools.filter(category='devops'),
+        "Visualization": tools.filter(category='visualization'),
+        "Databases": tools.filter(category='database'),
+    }
 
     context = {
         'about_data': about_data,
@@ -22,11 +32,17 @@ def index(request):
         'portfolio_items': portfolio_items,
         'category_choices': category_choices,
         'services':services,
+        'tools_by_category':tools_by_category,
+        'tools':tools,
     }
 
     return render(request, 'index.html', context)
 
-
+from django.views.generic import DetailView
+class PortfolioDetailView(DetailView):
+    model = Portfolio
+    template_name = 'portfolio/portfolio_detail.html'
+    context_object_name = 'portfolio'
 
 
 

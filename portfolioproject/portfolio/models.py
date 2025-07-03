@@ -62,6 +62,40 @@ class Experience(models.Model):
     def __str__(self):
         return f"{self.position} at {self.company}"
 
+from django.db import models
+
+# models.py
+from django.db import models
+
+class Tools(models.Model):
+    CATEGORY_CHOICES = [
+        ('programming', 'Programming Languages'),
+        ('devops', 'DevOps'),
+        ('visualization', 'Visualization'),
+        ('database', 'Databases'),
+    ]
+
+    COLOR_CHOICES = [
+        ('bg-primary', 'Primary'),
+        ('bg-secondary', 'Secondary'),
+        ('bg-success', 'Success'),
+        ('bg-danger', 'Danger'),
+        ('bg-warning', 'Warning'),
+        ('bg-info', 'Info'),
+        ('bg-dark', 'Dark'),
+    ]
+
+    name = models.CharField(max_length=50)
+    percentage = models.IntegerField()
+    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
+    progress_bar_color = models.CharField(max_length=20, choices=COLOR_CHOICES, default='bg-primary')
+    image = models.ImageField(upload_to='tools/', null=True, blank=True)  # Image icon for the tool
+    popularity = models.IntegerField(default=0, help_text="Indicates the popularity of the Tool", null=True,
+                                     blank=True)
+
+    def __str__(self):
+        return self.name
+
 
 class Skill(models.Model):
     COLOR_CHOICES = [

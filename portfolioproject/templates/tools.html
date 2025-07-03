@@ -1,0 +1,54 @@
+<!-- Tools Start -->
+<div class="container-fluid py-5" id="tools">
+    <div class="container">
+        <div class="position-relative d-flex align-items-center justify-content-center">
+            {% if request.path == '/' %}
+                <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #dee2e6;">Tools</h1>
+                <h1 class="position-absolute text-uppercase text-primary">My Tools</h1>
+            {% else %}
+            <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #dee2e6;">Outils</h1>
+                <h1 class="position-absolute text-uppercase text-primary">Mes Outils</h1>
+            {% endif %}
+        </div>
+
+        <!-- Tools Section -->
+        <div class="row">
+  {% for tool in tools %}
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4">
+      <div class="card mb-2 shadow-lg animate-pulse">
+        <div class="card-body">
+          {% if tool.image %}
+            <div class="d-flex justify-content-center mb-3">
+              <img src="{{ tool.image.url }}" alt="{{ tool.name }} icon" class="img-fluid" style="width: 100px; height: 60px;">
+            </div>
+          {% endif %}
+          <div class="d-flex justify-content-between">
+            <h6 class="font-weight-bold">{{ tool.name }}</h6>
+            <h6 class="font-weight-bold">{{ tool.percentage }}%</h6>
+          </div>
+          <div class="progress">
+            <div class="progress-bar {{ tool.progress_bar_color }}" role="progressbar" style="width: {{ tool.percentage }}%;" aria-valuenow="{{ tool.percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+
+    </div>
+</div>
+<!-- Tools End -->
+
+<style>
+    @keyframes pulseTool {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+.animate-pulse {
+  animation: pulseTool 2s infinite;
+}
+
+</style>

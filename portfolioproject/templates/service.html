@@ -13,35 +13,33 @@
             {% endif %}
         </div>
         <div class="row pb-3">
-            {% for service in services %}
-                <div class="col-lg-4 col-md-6 text-center mb-5">
-                    <div class="d-flex align-items-center justify-content-center mb-4">
-                        <i class="fab fa-2x {{ service.icon_class }} fa-2x service-icon bg-primary text-white mr-3"></i>
-                        <h4 class="font-weight-bold m-0">
-                            {% if request.path == '/' %}
-                                {{ service.title }}
-                            {% else %}
-                                {{ service.title_fr }}
-                            {% endif %}
-                        </h4>
-                    </div>
-                    <p>
-                        {% if request.path == '/' %}
-                            {{ service.description }}
-                        {% else %}
-                            {{ service.description_fr }}
-                        {% endif %}
-                    </p>
-                    <a class="border-bottom border-primary text-decoration-none" href="#">
-                        {% if request.path == '/' %}
-
-                        {% else %}
-
-                        {% endif %}
-                    </a>
-                </div>
-            {% endfor %}
+  {% for service in services %}
+    <div class="col-lg-4 col-md-6 mb-4" data-aos="zoom-in" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
+      <div class="card h-100 shadow-lg border-0 text-center">
+        <div class="card-body">
+          <div class="d-flex justify-content-center mb-3">
+            <i class="fab {{ service.icon_class }} fa-2x service-icon bg-primary text-white p-3 rounded-circle shadow"></i>
+          </div>
+          <h4 class="font-weight-bold">
+            {% if request.path == '/' %}
+              {{ service.title }}
+            {% else %}
+              {{ service.title_fr }}
+            {% endif %}
+          </h4>
+          <p class="text-muted mt-3">
+            {% if request.path == '/' %}
+              {{ service.description }}
+            {% else %}
+              {{ service.description_fr }}
+            {% endif %}
+          </p>
         </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
     </div>
 </div>
 <!-- Services End -->
