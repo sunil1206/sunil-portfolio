@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <!-- Google Fonts: Roboto -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+
+    <!-- Floating Action Button with chatbot icon -->
+    <button class="fab" onclick="toggleChat()">
+      <i class="fas fa-comments"></i>
+    </button>
+
+    <!-- Chat Screen -->
+    <div id="chat-screen" class="chat-container hidden">
+      <div class="chat-header">
+        Chatbot
+        <i class="fas fa-times close-chat" onclick="toggleChat()"></i>
+      </div>
+      <div class="chat-body">
+        <div class="chat-message bot" style=" width: 280px">
+        <img
+            src="https://www.w3schools.com/howto/img_avatar2.png"
+            alt="bot-avatar"
+            class="avatar"
+          />
+          <span>Hi! How can I help you today?</span>
+        </div>
+      </div>
+      <div class="chat-footer">
+        <input type="text" placeholder="Type your message..." id="userInput" />
+        <button id="sendBtn">Send</button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+
+</html>
+
+
+<style>
+
+/* Floating Action Button (FAB) */
+.fab {
+    position: fixed;
+  bottom: 20px;
+  right: 20px;
+
+  border: none;
+<!--  background-color: #6200ea;-->
+  width: 60px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  border-radius: 50%;
+    background-color: #6200ea;
+    color: white;
+    font-size: 24px;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+  z-index: 1001; /* Ensure the button is above the chatbot popup */
+}
+
+.fab:hover {
+    background-color: #3700b3;
+}
+
+.fab i {
+    font-size: 24px;
+}
+
+/* Chat container styling */
+.chat-container {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 300px;
+    height: 400px; /* Fixed height to prevent expanding */
+    background-color: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Chat header */
+.chat-header {
+    background-color: #6200ea;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    font-weight: 500;
+    position: relative;
+}
+
+/* Close button */
+.close-chat {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    cursor: pointer;
+}
+
+/* Chat body */
+.chat-body {
+    padding: 10px;
+    flex-grow: 1;
+    overflow-y: auto; /* Allows scrolling for long messages */
+    max-height: 350px; /* Adjusted to keep space for footer */
+}
+
+/* Hide the scrollbar */
+.chat-body::-webkit-scrollbar {
+    width: 0;
+}
+
+/* Common chat message style */
+.chat-message {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    max-width: 80%;
+    word-wrap: break-word;
+    position: relative;
+}
+
+/* Message bubble styling */
+.chat-message span {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 12px;
+}
+
+/* Bot message (aligned left) */
+.chat-message.bot {
+    justify-content: flex-start;
+}
+
+.chat-message.bot span {
+    background-color: #eee;
+}
+
+/* User message (aligned right) */
+.chat-message.user {
+    justify-content: flex-end;
+}
+
+.chat-message.user span {
+    background-color: #6200ea;
+    color: white;
+}
+
+/* Avatar styles */
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+/* Bot avatar (on the left side of message) */
+.chat-message.bot .avatar {
+    margin-right: 10px; /* Space between avatar and message */
+}
+
+/* User avatar (on the right side of message) */
+.chat-message.user .avatar {
+    margin-left: 5px; /* Reduced margin between avatar and chat window */
+    order: 1; /* Avatar appears after the message */
+}
+
+/* Chat footer (input and send button) */
+.chat-footer {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    background-color: #f9f9f9;
+}
+
+.chat-footer input {
+    flex-grow: 1;
+    border: none;
+    padding: 12px;
+    border-radius: 30px;
+    background-color: #e0e0e0;
+    outline: none;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.chat-footer input:focus {
+    background-color: #d4d4d4;
+}
+
+.chat-footer button {
+    padding: 10px 15px;
+    margin-left: 10px;
+    background-color: #6200ea;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.chat-footer button:hover {
+    background-color: #3700b3;
+}
+
+.chat-footer button i {
+    font-size: 18px;
+}
+
+</style>
+
+<script>
+  function getBotResponse(userInput) {
+    fetch("/chatbot/get_response/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken")
+        },
+        body: JSON.stringify({ message: userInput })
+    })
+    .then(response => response.json())
+    .then(data => addMessage(data.response, "bot"))
+    .catch(error => console.error("Error:", error));
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+        const cookies = document.cookie.split(";");
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+</script>
+
+<script>
+  // Function to toggle the chat screen's visibility
+function toggleChat() {
+    const chatScreen = document.getElementById('chat-screen');
+
+    if (chatScreen.classList.contains('hidden')) {
+      chatScreen.classList.remove('hidden'); // Show chat screen
+    } else {
+      chatScreen.classList.add('hidden'); // Hide chat screen
+    }
+  }
+
+  // Functionality for the 'Send' button to send user messages
+  document.getElementById('sendBtn').addEventListener('click', function() {
+    sendMessage();
+  });
+
+  // Function to handle the 'Enter' keypress to send a message
+  document.getElementById('userInput').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      sendMessage();
+    }
+  });
+
+  // Function to send the user message
+  function sendMessage() {
+    const userInput = document.getElementById('userInput').value;
+
+    if (userInput.trim()) {
+      addMessage(userInput, 'user');
+      document.getElementById('userInput').value = ''; // Clear input
+      getBotResponse(userInput); // Get the bot response
+    }
+  }
+
+  // Function to add messages to chat with avatars
+  function addMessage(message, type) {
+    const chatBody = document.querySelector('.chat-body');
+
+    // Create a new message element
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('chat-message', type); // 'bot' or 'user' class
+
+    // Create avatar
+    const avatar = document.createElement('img');
+    avatar.classList.add('avatar');
+
+    if (type === 'bot') {
+      avatar.src = 'https://www.w3schools.com/howto/img_avatar2.png'; // Placeholder bot avatar
+    } else {
+      avatar.src = 'https://www.w3schools.com/howto/img_avatar.png'; // Placeholder user avatar
+    }
+
+    // Create message text
+    const messageText = document.createElement('span');
+    messageText.textContent = message;
+
+    // Append avatar and text to the message element
+    messageElement.appendChild(avatar);
+    messageElement.appendChild(messageText);
+
+    // Add message to chat body
+    chatBody.appendChild(messageElement);
+    chatBody.scrollTop = chatBody.scrollHeight; // Scroll to the bottom
+  }
+
+  // Function to get bot response based on user input
+  function getBotResponse(userInput) {
+    let response = '';
+
+    // Simple keyword-based response logic
+    if (userInput.toLowerCase().includes('hello')) {
+      response = 'Hello! How can I assist you today?';
+    } else if (userInput.toLowerCase().includes('help')) {
+      response = 'Sure, I am here to help you! What do you need?';
+    } else if (userInput.toLowerCase().includes('bye')) {
+      response = 'Goodbye! Have a great day!';
+    } else if (userInput.toLowerCase().includes('what is figma')) {
+        response = 'Figma is a cloud-based design tool primarily used for UI/UX design, prototyping, and collaboration.';
+
+    } else if (userInput.toLowerCase().includes('how to create a frame')) {
+        response = 'To create a frame in Figma, press "F" on your keyboard or select the Frame tool from the toolbar, then click and drag to create a frame on your canvas.';
+
+    } else if (userInput.toLowerCase().includes('how to export assets')) {
+        response = 'To export assets in Figma, select the elements you want to export, click the export button in the right-hand sidebar, choose your format (PNG, SVG, etc.), and click "Export".';
+
+    } else if (userInput.toLowerCase().includes('how to use components')) {
+        response = 'Components in Figma are reusable design elements. To create one, select an element, right-click, and choose "Create Component". You can then use instances of this component throughout your design.';
+
+    } else if (userInput.toLowerCase().includes('how to share my project')) {
+        response = 'To share your Figma project, click on the "Share" button in the top-right corner and enter the email addresses of the people you want to invite. You can also set permissions to view or edit.';
+
+    } else if (userInput.toLowerCase().includes('how to use prototyping')) {
+        response = 'To create a prototype in Figma, go to "Prototype" mode, select the object you want to link, and drag the blue arrow to another frame to create a connection. You can adjust animations';
+    // User asks about Figma prototypes
+    } else if (userInput.toLowerCase().includes('prototype')) {
+        response = 'To create a prototype in Figma, click the Prototype tab in the right panel, then connect frames by dragging interactions between them.';
+
+    // User asks about sharing Figma files
+    } else if (userInput.toLowerCase().includes('share')) {
+        response = 'You can share your Figma file by clicking the "Share" button in the top-right corner and entering the email addresses of your collaborators.';
+
+    // User asks about Figma components
+    } else if (userInput.toLowerCase().includes('component')) {
+        response = 'Figma components allow you to create reusable elements. You can create one by selecting your design and choosing "Create Component" from the right-click menu.';
+
+    // User asks about Figma plugins
+    } else if (userInput.toLowerCase().includes('plugin')) {
+        response = 'To use plugins in Figma, go to the menu, select "Plugins", and browse the Plugin Library. You can install and use any plugin to extend Figma’s functionality.';
+
+    // User asks about exporting designs
+    } else if (userInput.toLowerCase().includes('export')) {
+        response = 'To export a design in Figma, select the object or frame, click "Export" in the right panel, choose the format (PNG, JPG, etc.), and click "Export".';
+
+    // User asks about design systems
+    } else if (userInput.toLowerCase().includes('design system')) {
+        response = 'A design system in Figma helps maintain consistency. You can create one by organizing styles, components, and assets into a shared library for your team.';
+
+    // User asks about creating grids in Figma
+    } else if (userInput.toLowerCase().includes('grid')) {
+        response = 'To add a grid in Figma, select a frame, go to the right panel, and click the "+" next to Layout Grids. You can adjust columns, rows, or set custom grid styles.';
+
+    // User asks about Figma auto layout
+    } else if (userInput.toLowerCase().includes('auto layout')) {
+        response = 'Auto Layout in Figma helps you create flexible and responsive designs. Select your frame or group, and click "Add Auto Layout" in the right panel to adjust spacing and alignment.';
+
+    // User asks about Figma version history
+    } else if (userInput.toLowerCase().includes('version history')) {
+        response = 'To view version history in Figma, click the file name at the top of your file, then select "Show Version History". You can view, restore, or name previous versions.';
+
+    // User asks about creating animations in Figma
+    } else if (userInput.toLowerCase().includes('animation')) {
+        response = 'To create animations in Figma, use Smart Animate. When setting up interactions in the Prototype tab, choose Smart Animate to automatically animate changes between frames.';
+
+    // User asks about Figma libraries
+    } else if (userInput.toLowerCase().includes('library')) {
+        response = 'Figma Libraries let you share components, styles, and assets. You can create a library by publishing components and styles to your team’s shared library.';
+
+    // User asks about importing Sketch files into Figma
+    } else if (userInput.toLowerCase().includes('import sketch')) {
+        response = 'You can import Sketch files into Figma by dragging and dropping the .sketch file into Figma. Figma will automatically convert it for you to continue working on it.';
+
+    // User asks about Figma shortcuts
+    } else if (userInput.toLowerCase().includes('shortcut')) {
+        response = 'Figma has many shortcuts, such as "Cmd + G" (Mac) or "Ctrl + G" (Windows) to group objects. You can find a full list under Help > Keyboard Shortcuts.';
+
+    // User asks about Figma comments
+    } else if (userInput.toLowerCase().includes('comment')) {
+        response = 'You can add comments in Figma by selecting the Comment tool from the toolbar or pressing "C" on your keyboard, then clicking anywhere on the canvas to leave your feedback.';
+
+    // User asks about constraints in Figma
+    } else if (userInput.toLowerCase().includes('constraints')) {
+        response = 'Constraints in Figma help control how objects behave when you resize their frames. You can set them in the right-hand panel by adjusting how objects are pinned.';
+
+    // User asks about using styles in Figma
+    } else if (userInput.toLowerCase().includes('style')) {
+        response = 'You can create and apply styles for colors, text, and effects in Figma. Select an object, and in the right panel, click the four dots next to Fill, Stroke, or Text to create a style.';
+
+    } else {
+            response = "I'm sorry, need help?";
+            }
+
+    // Add bot response to chat after a short delay
+    setTimeout(() => {
+      addMessage(response, 'bot');
+    }, 1000); // 1 second delay for bot response
+  }
+
+</script>

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'spamdetection',
     'cifar',
     'PythONFire',
+    'chatbot',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

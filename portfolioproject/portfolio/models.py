@@ -130,6 +130,15 @@ class Portfolio(models.Model):
     url = models.URLField(blank=True, null=True)
     popularity = models.IntegerField(default=0, help_text="Indicates the popularity of the portfolio item",null=True,blank=True)
 
+    # Additional Fields
+    problem = models.TextField(blank=True, null=True)
+    objective = models.TextField(blank=True, null=True)
+    solution = models.TextField(blank=True, null=True)
+    technologies_used = models.TextField(blank=True, null=True)
+    challenges_faced = models.TextField(blank=True, null=True)
+    methodology = models.TextField(blank=True, null=True)
+    result = models.TextField(blank=True, null=True)
+
     def __str__(self):
         return f"Portfolio - {self.category}"
     def save(self, *args, **kwargs):

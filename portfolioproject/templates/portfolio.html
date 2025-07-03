@@ -87,13 +87,44 @@
       </div>
 
       <div class="modal-body">
-        <img src="{{ portfolio_item.img.url }}" class="img-fluid mb-3" alt="{{ portfolio_item.name }}">
-        <p><strong>Category:</strong> {{ portfolio_item.category }}</p>
-        <p>{{ portfolio_item.description|default:"No description available." }}</p>
-        {% if portfolio_item.url %}
-          <a href="{{ portfolio_item.url }}" target="_blank" class="btn btn-outline-secondary btn-sm">Visit Project</a>
-        {% endif %}
-      </div>
+<div class="text-center">
+  <img src="{{ portfolio_item.img.url }}" class="img-fluid mb-4 rounded" alt="{{ portfolio_item.name }}">
+</div>
+ <div class="text-center mb-4">
+  <ul class="list-unstyled d-inline-block text-left">
+    <li><h3> <strong>  {{ portfolio_item.name }} </strong></h3></li>
+    <li><strong>Category:</strong> {{ portfolio_item.get_category_display }}</li>
+  </ul>
+</div>
+
+
+  <div class="mb-3">
+    <h6><strong>Problem</strong></h6>
+    <p>{{ portfolio_item.problem|default:"Not specified." }}</p>
+
+    <h6><strong>Objective</strong></h6>
+    <p>{{ portfolio_item.objective|default:"Not specified." }}</p>
+
+    <h6><strong>Solution</strong></h6>
+    <p>{{ portfolio_item.solution|default:"Not specified." }}</p>
+
+    <h6><strong>Technologies Used</strong></h6>
+    <p>{{ portfolio_item.technologies_used|default:"Not specified." }}</p>
+
+    <h6><strong>Challenges Faced</strong></h6>
+    <p>{{ portfolio_item.challenges_faced|default:"Not specified." }}</p>
+
+    <h6><strong>Methodology</strong></h6>
+    <p>{{ portfolio_item.methodology|default:"Not specified." }}</p>
+
+    <h6><strong>Result</strong></h6>
+    <p>{{ portfolio_item.result|default:"Not specified." }}</p>
+  </div>
+
+  {% if portfolio_item.url %}
+    <a href="{{ portfolio_item.url }}" target="_blank" class="btn btn-outline-primary btn-sm">Visit Project</a>
+  {% endif %}
+</div>
 
     </div>
   </div>
