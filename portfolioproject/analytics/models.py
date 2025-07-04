@@ -29,6 +29,15 @@ class DataScienceProject(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
     slug = models.SlugField(unique=True, max_length=255)
 
+    # Additional Fields
+    problem = models.TextField(blank=True, null=True)
+    objective = models.TextField(blank=True, null=True)
+    solution = models.TextField(blank=True, null=True)
+    technologies_used = models.TextField(blank=True, null=True)
+    challenges_faced = models.TextField(blank=True, null=True)
+    methodology = models.TextField(blank=True, null=True)
+    result = models.TextField(blank=True, null=True)
+
     def clean(self):
         # Check if image size is more than 500 KB
         if self.image and self.image.size > 500 * 1024:
