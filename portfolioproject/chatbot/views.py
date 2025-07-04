@@ -1,34 +1,263 @@
-from django.shortcuts import render
+# # chatbot/views.py
+#
+# from textblob import TextBlob
+# from django.views.decorators.csrf import csrf_exempt
+# from django.http import JsonResponse
+# import json
+#
+# from portfolio.models import (
+#     AboutMe, Qualification, Experience, Skill, Tools,
+#     Portfolio, Service
+# )
+# from .models import ChatbotIntentResponse
+#
+# # In-memory session
+# session_state = {}
+#
+# def correct_grammar(user_input):
+#     return str(TextBlob(user_input).correct()).lower()
+#
+# @csrf_exempt
+# def chatbot_response(request):
+#     if request.method != "POST":
+#         return JsonResponse({"response": "Invalid request method"}, status=405)
+#
+#     data = json.loads(request.body)
+#     user_input_raw = data.get("message", "")
+#     user_input = correct_grammar(user_input_raw)
+#     session_id = request.COOKIES.get("sessionid", "default")
+#
+#     state = session_state.get(session_id, {
+#         "step": None,
+#         "projects": [],
+#         "selected_project": None
+#     })
+#
+#     # === About Me ===
+#     if any(k in user_input for k in ["yourself", "about", "name", "who are you"]):
+#         about = AboutMe.objects.first()
+#         response = f"I'm {about.name}, with {about.experience} years of experience. Contact: {about.email}, Phone: {about.phone}."
+#
+#     # === Education ===
+#     elif any(k in user_input for k in ["education", "study", "degree", "qualification"]):
+#         quals = Qualification.objects.all().order_by("order_number")
+#         response = "Education:\n" + "\n".join([f"- {q.degree} at {q.institution} ({q.date_range})" for q in quals])
+#
+#     # === Experience ===
+#     elif any(k in user_input for k in ["experience", "work", "job", "career"]):
+#         exp = Experience.objects.all().order_by("order_number")
+#         response = "Work Experience:\n" + "\n".join([f"- {e.position} at {e.company} ({e.date_range})" for e in exp])
+#
+#     # === Skills ===
+#     elif "skill" in user_input:
+#         skills = Skill.objects.all()
+#         response = "My skills include: " + ", ".join([s.name for s in skills])
+#
+#     # === Tools ===
+#     elif any(k in user_input for k in ["tool", "technology", "tech stack"]):
+#         tools = Tools.objects.all()
+#         response = "I use tools/technologies such as: " + ", ".join([t.name for t in tools])
+#
+#     # === Services ===
+#     elif any(k in user_input for k in ["service", "offer", "provide"]):
+#         services = Service.objects.all()
+#         response = "Here are the services I offer:\n" + "\n".join([f"- {s.title}: {s.description}" for s in services])
+#
+#     # === Portfolio Start ===
+#     elif "portfolio" in user_input or "project" in user_input:
+#         projects = list(Portfolio.objects.all().order_by('-popularity')[:5])
+#         state["projects"] = projects
+#         state["step"] = "select_project"
+#         session_state[session_id] = state
+#         response = "Which project would you like to know about?\n" + "\n".join([f"{i+1}. {p.name}" for i, p in enumerate(projects)])
+#
+#     # === Portfolio Selection ===
+#     elif state["step"] == "select_project":
+#         try:
+#             index = int(user_input.strip()) - 1
+#             project = state["projects"][index]
+#             state["selected_project"] = project
+#             state["step"] = "project_action"
+#             session_state[session_id] = state
+#             response = f"You selected: {project.name}\n1. Show project details\n2. Visit project link"
+#         except:
+#             response = "Please select a valid project number."
+#
+#     # === Portfolio Action ===
+#     elif state["step"] == "project_action":
+#         project = state["selected_project"]
+#         if "1" in user_input:
+#             response = f"\U0001F4CA Objective: {project.objective or 'N/A'}\n\U0001F9E0 Solution: {project.solution or 'N/A'}\n\U0001F527 Tools: {project.technologies_used or 'N/A'}"
+#             state["step"] = None
+#         elif "2" in user_input and project.url:
+#             response = f"Visit project: {project.url}"
+#             state["step"] = None
+#         else:
+#             response = "Please type 1 for details or 2 to visit link."
+#         session_state[session_id] = state
+#
+#     # === Social Links ===
+#     elif any(k in user_input for k in ["linkedin", "github", "instagram", "facebook"]):
+#         about = AboutMe.objects.first()
+#         links = {
+#             "LinkedIn": about.linkedin,
+#             "GitHub": about.github,
+#             "Instagram": about.instagram,
+#             "Facebook": about.facebook
+#         }
+#         response = "Social Profiles:\n" + "\n".join([f"{k}: {v}" for k, v in links.items() if v])
+#
+#     # === CV / Resume ===
+#     elif "cv" in user_input or "resume" in user_input:
+#         about = AboutMe.objects.first()
+#         if about.cv:
+#             response = f"Download my CV here: {about.cv.url}"
+#         else:
+#             response = "My CV is currently not uploaded."
+#
+#     # === Fallback ===
+#     else:
+#         fallback = ChatbotIntentResponse.objects.filter(question__icontains=user_input).first()
+#         response = fallback.response if fallback else "I can help with skills, experience, tools, services, or portfolio. Try asking about any of these."
+#
+#     return JsonResponse({"response": response})
 
-# Create your views here.
-# chatbot/views.py
 
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from .models import ChatbotIntentResponse
 from textblob import TextBlob
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
+
+from portfolio.models import (
+    AboutMe, Qualification, Experience, Skill, Tools,
+    Portfolio, Service
+)
+from .models import ChatbotIntentResponse
+
+# In-memory session
+session_state = {}
+
+def correct_grammar(user_input):
+    return str(TextBlob(user_input).correct()).lower()
+
+def normalize_input(text):
+    substitutions = {
+        "hru": "how are you",
+        "hwr u": "how are you",
+        "hw r u": "how are you",
+        "gm": "good morning",
+        "gn": "good night",
+        "sup": "what's up"
+    }
+    for k, v in substitutions.items():
+        text = text.replace(k, v)
+    return text.strip().lower()
 
 @csrf_exempt
 def chatbot_response(request):
-    if request.method == "POST":
-        user_input = request.POST.get("message", "").lower().strip()
+    if request.method != "POST":
+        return JsonResponse({"response": "Invalid request method"}, status=405)
 
-        # Optional grammar correction
+    data = json.loads(request.body)
+    user_input_raw = data.get("message", "")
+    user_input = normalize_input(correct_grammar(user_input_raw))
+    session_id = request.COOKIES.get("sessionid", "default")
+
+    state = session_state.get(session_id, {
+        "step": None,
+        "projects": [],
+        "selected_project": None
+    })
+
+    # === 1. Intent-based response from DB ===
+    intent_match = ChatbotIntentResponse.objects.filter(question__iexact=user_input).first()
+    if intent_match:
+        state["step"] = None
+        session_state[session_id] = state
+        return JsonResponse({"response": intent_match.response})
+
+    # === 2. Custom flow-based rules ===
+    if any(k in user_input for k in ["yourself", "about", "name", "who are you"]):
+        about = AboutMe.objects.first()
+        response = f"I'm {about.name}, with {about.experience} years of experience. Contact: {about.email}, Phone: {about.phone}."
+
+    elif any(k in user_input for k in ["education", "study", "degree", "qualification"]):
+        quals = Qualification.objects.all().order_by("order_number")
+        response = "Education:\n" + "\n".join([f"- {q.degree} at {q.institution} ({q.date_range})" for q in quals])
+
+    elif any(k in user_input for k in ["experience", "work", "job", "career"]):
+        exp = Experience.objects.all().order_by("order_number")
+        response = "Work Experience:\n" + "\n".join([f"- {e.position} at {e.company} ({e.date_range})" for e in exp])
+
+    elif "skill" in user_input:
+        skills = Skill.objects.all()
+        response = "My skills include: " + ", ".join([s.name for s in skills])
+
+    elif any(k in user_input for k in ["tool", "technology", "tech stack"]):
+        tools = Tools.objects.all()
+        response = "I use tools/technologies such as: " + ", ".join([t.name for t in tools])
+
+    elif any(k in user_input for k in ["service", "offer", "provide"]):
+        services = Service.objects.all()
+        response = "Here are the services I offer:\n" + "\n".join([f"- {s.title}: {s.description}" for s in services])
+
+    elif "portfolio" in user_input or "project" in user_input:
+        projects = list(Portfolio.objects.all().order_by('-popularity')[:5])
+        state["projects"] = projects
+        state["step"] = "select_project"
+        session_state[session_id] = state
+        response = "Which project would you like to know about?\n" + "\n".join([f"{i+1}. {p.name}" for i, p in enumerate(projects)])
+
+    elif state["step"] == "select_project":
         try:
-            corrected_input = str(TextBlob(user_input).correct())
+            index = int(user_input.strip()) - 1
+            project = state["projects"][index]
+            state["selected_project"] = project
+            state["step"] = "project_action"
+            session_state[session_id] = state
+            response = f"You selected: {project.name}\n1. Show project details\n2. Visit project link"
         except:
-            corrected_input = user_input
+            response = "Please select a valid project number."
 
-        # DB lookup
-        entry = ChatbotIntentResponse.objects.filter(
-            question__iexact=corrected_input
-        ).first()
-
-        if entry:
-            response = entry.response
+    elif state["step"] == "project_action":
+        project = state["selected_project"]
+        if "1" in user_input:
+            response = f"\U0001F4CA Objective: {project.objective or 'N/A'}\n\U0001F9E0 Solution: {project.solution or 'N/A'}\n\U0001F527 Tools: {project.technologies_used or 'N/A'}"
+            state["step"] = None
+        elif "2" in user_input and project.url:
+            response = f"Visit project: {project.url}"
+            state["step"] = None
         else:
-            response = "I'm sorry, I didn't understand that. ?"
+            response = "Please type 1 for details or 2 to visit link."
+        session_state[session_id] = state
 
-        return JsonResponse({"response": response})
+    elif any(k in user_input for k in ["linkedin", "github", "instagram", "facebook"]):
+        about = AboutMe.objects.first()
+        links = {
+            "LinkedIn": about.linkedin,
+            "GitHub": about.github,
+            "Instagram": about.instagram,
+            "Facebook": about.facebook
+        }
+        response = "Social Profiles:\n" + "\n".join([f"{k}: {v}" for k, v in links.items() if v])
 
-    return JsonResponse({"error": "Invalid request"}, status=400)
+    elif "cv" in user_input or "resume" in user_input:
+        about = AboutMe.objects.first()
+        if about.cv:
+            response = f"Download my CV here: {about.cv.url}"
+        else:
+            response = "My CV is currently not uploaded."
+
+    # === 3. Fallback: Try partial match in ChatbotIntentResponse ===
+    else:
+        partial_match = ChatbotIntentResponse.objects.filter(question__icontains=user_input).first()
+        if partial_match:
+            response = partial_match.response
+        else:
+            response = "I can help with skills, experience, tools, services, or portfolio. Try asking about any of these."
+
+        # Reset step to avoid getting stuck in old flows
+        state["step"] = None
+
+    session_state[session_id] = state
+    return JsonResponse({"response": response})

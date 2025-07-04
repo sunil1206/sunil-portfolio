@@ -69,10 +69,15 @@ from django.db import models
 
 class Tools(models.Model):
     CATEGORY_CHOICES = [
-        ('programming', 'Programming Languages'),
-        ('devops', 'DevOps'),
-        ('visualization', 'Visualization'),
+        ('programming', 'Programming'),
+        ('web', 'Web & Frameworks'),
+        ('ml', 'ML/DL'),
+        ('data_tools', 'Data Tools'),
+        ('nlp', 'NLP'),
+        ('deployment', 'Deployment'),
         ('database', 'Databases'),
+        ('cloud_devops', 'Cloud & DevOps'),
+        ('others', 'others'),
     ]
 
     COLOR_CHOICES = [

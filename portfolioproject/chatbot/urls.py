@@ -1,8 +1,8 @@
 from django.urls import path
 
-from PythONFire import views
+from chatbot import views
 
 urlpatterns = [
-path("chatbot/", views.chatbot_response, name="chatbot-response"),
+    path('get_response/', views.chatbot_response, name='chatbot_response'),
 
 ]
