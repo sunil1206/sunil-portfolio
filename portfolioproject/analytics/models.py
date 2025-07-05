@@ -136,8 +136,8 @@ class MLModel(models.Model):
         null=True,
         blank=True
     )
-    evaluation_metrics = models.TextField(help_text="Evaluation metrics for the model")
-    insights = models.TextField(help_text="Key insights from the ML model")
+    evaluation_metrics = models.TextField(help_text="Evaluation metrics for the model",blank=True, null=True)
+    insights = models.TextField(help_text="Key insights from the ML model",blank=True, null=True)
 
     def increase_popularity(self):
         """Method to increase popularity by 1."""
