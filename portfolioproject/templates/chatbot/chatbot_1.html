@@ -324,7 +324,7 @@ function getCookie(name) {
     const avatar = document.createElement('img');
     avatar.classList.add('avatar');
     avatar.src = type === 'bot'
-      ? 'https://www.w3schools.com/howto/img_avatar2.png'
+      ? '{% static 'sunil.png' %}'
       : 'https://www.w3schools.com/howto/img_avatar.png';
 
     const messageText = document.createElement('span');

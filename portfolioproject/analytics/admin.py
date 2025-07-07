@@ -7,8 +7,8 @@ from .models import DataScienceProject, EDA, MLModel,DashboardMetric
 
 @admin.register(DataScienceProject)
 class DataScienceProjectAdmin(admin.ModelAdmin):
-    list_display = ('title', 'dataset_name', 'date_created', 'last_updated')
-    search_fields = ('title', 'dataset_name')
+    list_display = ('title','date_created', 'last_updated')
+    search_fields = ('title',)
 
 
 @admin.register(EDA)

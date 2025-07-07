@@ -21,13 +21,15 @@ class DataScienceProject(models.Model):
     title = models.CharField(max_length=200, help_text="Title of the project")
     image = models.ImageField(upload_to='Datascience/')
     description = models.TextField(help_text="Brief description of the project")
-    dataset_name = models.CharField(max_length=200, help_text="Name of the dataset used")
+    # dataset_name = models.CharField(max_length=200, help_text="Name of the dataset used")
     popularity = models.PositiveIntegerField(default=0, help_text="Popularity of the project")
-    dataset_description = models.TextField(help_text="Details about the dataset")
-    dataset_source = models.URLField(blank=True, help_text="URL link to the dataset, if available")
+    # dataset_description = models.TextField(help_text="Details about the dataset")
+    # dataset_source = models.URLField(blank=True, help_text="URL link to the dataset, if available")
     date_created = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     slug = models.SlugField(unique=True, max_length=255)
+    url = models.URLField(blank=True, null=True)
+
 
     # Additional Fields
     problem = models.TextField(blank=True, null=True)

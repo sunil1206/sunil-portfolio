@@ -2,6 +2,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
 
 # Create your views here.
+from analytics.models import DataScienceProject
 from portfolio.models import AboutMe, Skill, Qualification, Experience, Portfolio, Service, Tools
 
 
@@ -13,6 +14,7 @@ def index(request):
     portfolio_items = Portfolio.objects.order_by('-popularity')
     category_choices = Portfolio.CATEGORY_CHOICES
     services = Service.objects.all()
+    datascience_projects = DataScienceProject.objects.order_by('-popularity')
     tools = Tools.objects.order_by('-popularity')
 
 
@@ -32,6 +34,7 @@ def index(request):
         'portfolio_items': portfolio_items,
         'category_choices': category_choices,
         'services':services,
+        'datascience_projects':datascience_projects,
         'tools_by_category':tools_by_category,
         'tools':tools,
     }
