@@ -11,9 +11,9 @@
             {% endif %}
         </div>
 
-        <!-- Tools Section -->
-        <div class="row">
-  {% for tool in tools %}
+      <!-- Tools Section -->
+<div class="row" id="toolRowInitial">
+  {% for tool in tools|slice:":12" %}
     <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4">
       <div class="card mb-2 shadow-lg animate-pulse">
         <div class="card-body">
@@ -23,17 +23,51 @@
             </div>
           {% endif %}
           <div class="d-flex justify-content-between">
-<!--            <h6 class="font-weight-bold">{{ tool.name }}</h6>-->
             <h6 class="font-weight-bold">{{ tool.percentage }}%</h6>
           </div>
           <div class="progress">
-            <div class="progress-bar {{ tool.progress_bar_color }}" role="progressbar" style="width: {{ tool.percentage }}%;" aria-valuenow="{{ tool.percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar {{ tool.progress_bar_color }}" role="progressbar"
+                 style="width: {{ tool.percentage }}%;" aria-valuenow="{{ tool.percentage }}"
+                 aria-valuemin="0" aria-valuemax="100">
+            </div>
           </div>
         </div>
       </div>
     </div>
   {% endfor %}
 </div>
+
+<!-- Hidden Row -->
+<div class="row d-none" id="toolRowMore">
+  {% for tool in tools|slice:"12:" %}
+    <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-4">
+      <div class="card mb-2 shadow-lg animate-pulse">
+        <div class="card-body">
+          {% if tool.image %}
+            <div class="d-flex justify-content-center mb-3">
+              <img src="{{ tool.image.url }}" alt="{{ tool.name }} icon" class="img-fluid" style="width: 100px; height: 60px;">
+            </div>
+          {% endif %}
+          <div class="d-flex justify-content-between">
+            <h6 class="font-weight-bold">{{ tool.percentage }}%</h6>
+          </div>
+          <div class="progress">
+            <div class="progress-bar {{ tool.progress_bar_color }}" role="progressbar"
+                 style="width: {{ tool.percentage }}%;" aria-valuenow="{{ tool.percentage }}"
+                 aria-valuemin="0" aria-valuemax="100">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<!-- View More Button -->
+<div class="text-center mt-4">
+  <button class="btn btn-primary" id="viewMoreBtn">View More</button>
+</div>
+
 
 
     </div>
@@ -55,3 +89,9 @@
 
 </style>
 
+<script>
+document.getElementById("viewMoreBtn").addEventListener("click", function () {
+  document.getElementById("toolRowMore").classList.remove("d-none");
+  this.style.display = "none"; // hide button after clicking
+});
+</script>

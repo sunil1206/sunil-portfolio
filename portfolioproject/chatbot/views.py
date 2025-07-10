@@ -202,7 +202,7 @@ def chatbot_response(request):
         response = "Here are the services I offer:\n" + "\n".join([f"- {s.title}: {s.description}" for s in services])
 
     elif "portfolio" in user_input or "project" in user_input:
-        projects = list(Portfolio.objects.all().order_by('-popularity')[:5])
+        projects = list(Portfolio.objects.all().order_by('-popularity')[:10])
         state["projects"] = projects
         state["step"] = "select_project"
         session_state[session_id] = state
