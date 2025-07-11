@@ -128,13 +128,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
 
+from analytics.models import DataScienceProject
 from portfolio.models import (
     AboutMe, Qualification, Experience, Skill, Tools,
     Portfolio, Service
 )
 from .models import ChatbotIntentResponse
 
-# In-memory session
 session_state = {}
 
 def correct_grammar(user_input):
@@ -169,14 +169,14 @@ def chatbot_response(request):
         "selected_project": None
     })
 
-    # === 1. Intent-based response from DB ===
+    # === 1. Intent-based DB match ===
     intent_match = ChatbotIntentResponse.objects.filter(question__iexact=user_input).first()
     if intent_match:
         state["step"] = None
         session_state[session_id] = state
         return JsonResponse({"response": intent_match.response})
 
-    # === 2. Custom flow-based rules ===
+    # === 2. Custom rule-based flows ===
     if any(k in user_input for k in ["yourself", "about", "name", "who are you"]):
         about = AboutMe.objects.first()
         response = f"I'm {about.name}, with {about.experience} years of experience. Contact: {about.email}, Phone: {about.phone}."
@@ -201,6 +201,7 @@ def chatbot_response(request):
         services = Service.objects.all()
         response = "Here are the services I offer:\n" + "\n".join([f"- {s.title}: {s.description}" for s in services])
 
+    # === Portfolio project flow ===
     elif "portfolio" in user_input or "project" in user_input:
         projects = list(Portfolio.objects.all().order_by('-popularity')[:10])
         state["projects"] = projects
@@ -231,6 +232,47 @@ def chatbot_response(request):
             response = "Please type 1 for details or 2 to visit link."
         session_state[session_id] = state
 
+    # === Data Science Project flow ===
+    elif "data science" in user_input or "ml project" in user_input or "ai project" in user_input:
+        ds_projects = list(DataScienceProject.objects.all().order_by('-popularity')[:10])
+        state["projects"] = ds_projects
+        state["step"] = "select_ds_project"
+        session_state[session_id] = state
+        response = "Here are my top Data Science projects:\n" + "\n".join([f"{i+1}. {p.title}" for i, p in enumerate(ds_projects)])
+
+    elif state["step"] == "select_ds_project":
+        try:
+            index = int(user_input.strip()) - 1
+            project = state["projects"][index]
+            state["selected_project"] = project
+            state["step"] = "ds_project_action"
+            session_state[session_id] = state
+            response = f"You selected: {project.title}\n1. Show project details\n2. Visit project link"
+        except:
+            response = "Please select a valid Data Science project number."
+
+    elif state["step"] == "ds_project_action":
+        project = state["selected_project"]
+        if "1" in user_input:
+            response = (
+                f"\U0001F4D8 Title: {project.title}\n"
+                f"\U0001F4CA Problem: {project.problem or 'N/A'}\n"
+                f"\U0001F52C Objective: {project.objective or 'N/A'}\n"
+                f"\U0001F9E0 Solution: {project.solution or 'N/A'}\n"
+                f"\U0001F527 Tools: {project.technologies_used or 'N/A'}\n"
+                f"\U0001F6AB Challenges: {project.challenges_faced or 'N/A'}\n"
+                f"\U0001F4C8 Methodology: {project.methodology or 'N/A'}\n"
+                f"\U0001F3C6 Result: {project.result or 'N/A'}"
+            )
+            state["step"] = None
+        elif "2" in user_input and project.url:
+            response = f"Visit project: {project.url}"
+            state["step"] = None
+        else:
+            response = "Please type 1 for details or 2 to visit link."
+        session_state[session_id] = state
+
+    # === Social / Contact Info ===
     elif any(k in user_input for k in ["linkedin", "github", "instagram", "facebook"]):
         about = AboutMe.objects.first()
         links = {
@@ -248,16 +290,15 @@ def chatbot_response(request):
         else:
             response = "My CV is currently not uploaded."
 
-    # === 3. Fallback: Try partial match in ChatbotIntentResponse ===
+    # === 3. Fallback ===
     else:
         partial_match = ChatbotIntentResponse.objects.filter(question__icontains=user_input).first()
         if partial_match:
             response = partial_match.response
         else:
-            response = "I can help with skills, experience, tools, services, or portfolio. Try asking about any of these."
-
-        # Reset step to avoid getting stuck in old flows
+            response = "I can help with skills, experience, tools, services, data science or portfolio. Try asking about any of these."
         state["step"] = None
 
     session_state[session_id] = state
     return JsonResponse({"response": response})
+
