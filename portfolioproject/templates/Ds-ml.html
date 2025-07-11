@@ -95,7 +95,9 @@
                         <p>{{ project.methodology|default:"Not specified."|safe }}</p>
 
                         <h6><strong>Result</strong></h6>
-                        <p>{{ project.result|default:"Not specified."|safe }}</p>
+                        <p>{{ project.result|default:"Not specified." }}</p>
+
+
 
                         {% if project.url %}
                         <a href="{{ project.url }}" target="_blank" class="btn btn-outline-primary btn-sm">View

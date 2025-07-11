@@ -1,54 +1,17 @@
-version: '3.9'
+server {
+    listen 80;
 
-services:
-  spam_api:
-    build:
-      context: ./fastapi_app
-      dockerfile: Dockerfile
-    command: uvicorn spam:app --host 0.0.0.0 --port 8001
-    volumes:
-      - ./fastapi_app:/app
-    expose:
-      - 8001
+    location /static/ {
+        alias /app/staticfiles/;
+    }
 
-  trash_api:
-    build:
-      context: ./fastapi_app
-      dockerfile: Dockerfile
-    command: uvicorn trash:app --host 0.0.0.0 --port 8002
-    volumes:
-      - ./fastapi_app:/app
-    expose:
-      - 8002
+    location / {
+        proxy_pass http://localhost:8000;
+    }
 
-  cifar_api:
-    build:
-      context: ./fastapi_app
-      dockerfile: Dockerfile
-    command: uvicorn cifar:app --host 0.0.0.0 --port 8003
-    volumes:
-      - ./fastapi_app:/app
-    expose:
-      - 8003
-
-  main_api:
-    build:
-      context: ./fastapi_app
-      dockerfile: Dockerfile
-    command: uvicorn main:app --host 0.0.0.0 --port 8004
-    volumes:
-      - ./fastapi_app:/app
-    expose:
-      - 8004
-
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/portfolio.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - spam_api
-      - trash_api
-      - cifar_api
-      - main_api
+    location /api/ {
+        proxy_pass http://localhost:8001/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
