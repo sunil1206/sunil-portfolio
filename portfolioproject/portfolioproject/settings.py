@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'grappelli',
     'portfolio',
-    # 'french',
+    'french',
     'analytics',
     'seo',
     'model',

@@ -30,7 +30,7 @@ urlpatterns = [
     path('grappelli/', include('grappelli.urls')),
     path('admin/', admin.site.urls),
     path('',include('portfolio.urls')),
-    # path('fr/',include('french.urls')),
+    path('fr/',include('french.urls')),
     path('model/',include('model.urls')),
     path('dsa/',include('analytics.urls')),
     path('seo/', include('seo.urls')),
