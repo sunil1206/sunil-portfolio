@@ -1,0 +1,36 @@
+portfolioproject/
+├── manage.py
+├── requirements.txt
+├── entrypoint.sh
+├── Dockerfile
+├── .dockerignore
+├── portfolioproject/
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   ├── wsgi.py
+├── spamdetection/
+│   ├── apps.py
+│   ├── models.py
+│   ├── urls.py
+│   ├── views.py
+│   ├── ...
+├── fastapi_app
+│   ├── model
+│   │   ├── light-gru_spam_model.h5
+│   ├── spam.py
+│   ├── trash.py
+│   ├── main.py
+│   ├── chatnot.py
+│   ├── diffusion.py
+│   ├── requirements.txt.py
+│   ├── Dockerfile
+├── nginx/
+│   ├── ssl
+│   ├── portfolio.conf
+├── cifar/
+│   ├── apps.py
+│   ├── models.py
+│   ├── urls.py
+│   ├── views.py
+

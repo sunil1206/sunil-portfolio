@@ -127,6 +127,7 @@ from textblob import TextBlob
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
+from openai import OpenAI
 
 from analytics.models import DataScienceProject
 from portfolio.models import (
@@ -153,6 +154,10 @@ def normalize_input(text):
         text = text.replace(k, v)
     return text.strip().lower()
 
+client = OpenAI(
+    base_url="https://inference.baseten.co/v1",
+    api_key="Ff2pDjis.SmcQFiifsbD6Cf4lmhTPa3wDXCElEVer"  # <-- IMPORTANT: Replace with your actual key
+)
 @csrf_exempt
 def chatbot_response(request):
     if request.method != "POST":
@@ -295,8 +300,25 @@ def chatbot_response(request):
         partial_match = ChatbotIntentResponse.objects.filter(question__icontains=user_input).first()
         if partial_match:
             response = partial_match.response
+        # else:
+        #     response = "I can help with skills, experience, tools, services, data science or portfolio. Try asking about any of these."
+        # state["step"] = None
         else:
-            response = "I can help with skills, experience, tools, services, data science or portfolio. Try asking about any of these."
+            # NEW: If no partial match, call the external LLM API
+            try:
+                api_response = client.chat.completions.create(
+                    model="deepseek-ai/DeepSeek-V3-0324",
+                    messages=[
+                        {"role": "system", "content": "You are a helpful assistant. Keep your answers concise."},
+                        {"role": "user", "content": user_input}
+                    ]
+                )
+                response = api_response.choices[0].message.content
+            except Exception as e:
+                # Log the error for debugging, e.g., print(f"API Error: {e}")
+                response = "I'm sorry, I'm having a bit of trouble thinking right now. Could you please ask something else?"
+
+            # Reset the state in the fallback case
         state["step"] = None
 
     session_state[session_id] = state

@@ -1,0 +1,71 @@
+<section id="portfolio" class="portfolio py-5">
+    <div class="container">
+
+        <div class="position-relative d-flex align-items-center justify-content-center mb-5">
+            {% if request.path == '/' %}
+            <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #dee2e6;">Projects</h1>
+            <h1 class="position-absolute text-uppercase text-primary">My Python Hackathon</h1>
+            {% else %}
+            <h1 class="display-1 text-uppercase text-white" style="-webkit-text-stroke: 1px #dee2e6;">Projets</h1>
+            <h1 class="position-absolute text-uppercase text-primary">Mon Python Hackathon</h1>
+            {% endif %}
+        </div>
+
+        <div id="portfolioCarousel" class="carousel slide" data-ride="carousel" data-interval="4000">
+            <div class="carousel-inner">
+                {% for project in python_projects %}
+                {% if forloop.first or forloop.counter0|divisibleby:4 %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <div class="row">
+                        {% endif %}
+
+                        <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="card h-100 shadow-sm">
+<!--                                <img src="{{ project.image.url }}" class="card-img-top" alt="{{ project.name }}">-->
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">{{ project.name }}</h5>
+                                    {% if project.url %}
+                                    <a href="{{ project.url }}" class="btn btn-primary btn-sm mb-1" data-toggle="modal"
+                                       data-target="#projectModal{{ forloop.counter }}">View Details</a>
+
+<!--                                    <a href="{{ project.url }}" class="btn btn-outline-primary btn-sm" target="_blank">Dataset</a>-->
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if forloop.counter|divisibleby:4 or forloop.last %}
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <a class="carousel-control-prev" href="#portfolioCarousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#portfolioCarousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+        {% for project in python_projects %}
+        <div class="modal fade" id="projectModal{{ forloop.counter }}" tabindex="-1" role="dialog"
+             aria-labelledby="projectModalLabel{{ forloop.counter }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">{{ project.name }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</section>

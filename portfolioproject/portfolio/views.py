@@ -2,6 +2,7 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
 
 # Create your views here.
+from PythONFire.models import PythonProject
 from analytics.models import DataScienceProject
 from portfolio.models import AboutMe, Skill, Qualification, Experience, Portfolio, Service, Tools
 
@@ -14,6 +15,7 @@ def index(request):
     portfolio_items = Portfolio.objects.order_by('-popularity')
     category_choices = Portfolio.CATEGORY_CHOICES
     services = Service.objects.all()
+    python_projects = PythonProject.objects.all()
     datascience_projects = DataScienceProject.objects.order_by('-popularity')
     tools = Tools.objects.order_by('-popularity')
 
@@ -37,6 +39,7 @@ def index(request):
         'datascience_projects':datascience_projects,
         'tools_by_category':tools_by_category,
         'tools':tools,
+        'python_projects':python_projects,
     }
 
     return render(request, 'index.html', context)
