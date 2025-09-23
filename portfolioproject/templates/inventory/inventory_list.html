@@ -1,0 +1,65 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}Inventory Items - Franprix Inventory{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-gray-800 mb-6">All Inventory Items</h1>
+
+<div class="bg-white p-4 rounded-lg shadow-md">
+<div class="overflow-x-auto">
+    <table class="w-full text-left">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="p-3"></th>
+                <th class="p-3">Product Name</th>
+                <th class="p-3">Brand</th>
+                <th class="p-3">Location</th>
+                <th class="p-3">Qty</th>
+                <th class="p-3">Expiry Date</th>
+                <th class="p-3">Status</th>
+                <th class="p-3">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in inventory_items %}
+            {% with status=item.expiry_status %}
+            <tr class="border-b 
+                {% if status == 'expired' %} bg-red-100 text-red-900 
+                {% elif status == 'urgent' %} bg-orange-100 text-orange-900
+                {% elif status == 'soon' %} bg-yellow-100 text-yellow-900
+                {% else %} hover:bg-gray-50 {% endif %}">
+                <td class="p-2"><img src="{{ item.product.image_url|default:'https://placehold.co/64x64/e2e8f0/cbd5e0?text=N/A' }}" alt="{{ item.product.name }}" class="w-12 h-12 object-contain rounded-md"></td>
+                <td class="p-3 font-medium">{{ item.product.name }}</td>
+                <td class="p-3">{{ item.product.brand|default:'-' }}</td>
+                <td class="p-3">{{ item.rack_zone }}</td>
+                <td class="p-3 font-bold">{{ item.quantity }}</td>
+                <td class="p-3">{{ item.expiry_date|date:"Y-m-d" }}</td>
+                <td class="p-3">
+                    <span class="px-2 py-1 text-xs font-semibold rounded-full
+                        {% if status == 'expired' %} bg-red-200 text-red-800 
+                        {% elif status == 'urgent' %} bg-orange-200 text-orange-800
+                        {% elif status == 'soon' %} bg-yellow-200 text-yellow-800
+                        {% else %} bg-green-200 text-green-800 {% endif %}">
+                        {% if status == 'expired' %}Expired {{ item.days_until_expiry }} days ago
+                        {% else %}Expires in {{ item.days_until_expiry }} days{% endif %}
+                    </span>
+                </td>
+                <td class="p-3">
+                    <form action="{% url 'delete_item' item.id %}" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                        {% csrf_token %}
+                        <button type="submit" class="text-red-500 hover:text-red-700 font-bold">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endwith %}
+        {% empty %}
+            <tr>
+                <td colspan="8" class="text-center py-10 text-gray-500">The inventory is currently empty.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+{% endblock %}
+

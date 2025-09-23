@@ -1,0 +1,67 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}Alert Monitor - Franprix Inventory{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-gray-800 mb-6">Alert Monitor</h1>
+
+<!-- Expired Items -->
+<div class="mb-8">
+    <h2 class="text-2xl font-bold text-white bg-red-600 px-4 py-2 rounded-t-lg">Expired Items</h2>
+    <div class="bg-white p-4 rounded-b-lg shadow-md">
+        {% if expired_items %}
+            <ul class="space-y-3">
+            {% for item in expired_items %}
+                <li class="p-3 bg-red-50 rounded-md flex justify-between items-center">
+                    <div>
+                        <p class="font-bold">{{ item.product.name }} <span class="text-sm font-normal text-gray-600">({{ item.product.brand }})</span></p>
+                        <p class="text-sm text-red-800">Expired on {{ item.expiry_date|date:"F d, Y" }} | Qty: {{ item.quantity }} | Location: {{ item.rack_zone }}</p>
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-600 p-4">No expired items found.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Expiring Tomorrow -->
+<div class="mb-8">
+    <h2 class="text-2xl font-bold text-white bg-orange-500 px-4 py-2 rounded-t-lg">Expiring Tomorrow</h2>
+    <div class="bg-white p-4 rounded-b-lg shadow-md">
+        {% if expiring_tomorrow %}
+            <ul class="space-y-3">
+            {% for item in expiring_tomorrow %}
+                <li class="p-3 bg-orange-50 rounded-md">
+                    <p class="font-bold">{{ item.product.name }} <span class="text-sm font-normal text-gray-600">({{ item.product.brand }})</span></p>
+                    <p class="text-sm text-orange-800">Qty: {{ item.quantity }} | Location: {{ item.rack_zone }}</p>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-600 p-4">No items expiring tomorrow.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Expiring Soon -->
+<div>
+    <h2 class="text-2xl font-bold text-gray-800 bg-yellow-400 px-4 py-2 rounded-t-lg">Expiring in 2-7 Days</h2>
+    <div class="bg-white p-4 rounded-b-lg shadow-md">
+        {% if expiring_soon %}
+            <ul class="space-y-3">
+            {% for item in expiring_soon %}
+                <li class="p-3 bg-yellow-50 rounded-md">
+                    <p class="font-bold">{{ item.product.name }} <span class="text-sm font-normal text-gray-600">({{ item.product.brand }})</span></p>
+                    <p class="text-sm text-yellow-800">Expires in {{ item.days_until_expiry }} days | Qty: {{ item.quantity }} | Location: {{ item.rack_zone }}</p>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-gray-600 p-4">No items expiring soon.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,57 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}Dashboard - Franprix Inventory{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
+
+<!-- Stat Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-orange-500">
+        <h2 class="text-gray-500 text-lg">Expiring Tomorrow</h2>
+        <p class="text-4xl font-bold text-orange-500">{{ expiring_tomorrow_count }}</p>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-yellow-500">
+        <h2 class="text-gray-500 text-lg">Expiring Within 7 Days</h2>
+        <p class="text-4xl font-bold text-yellow-500">{{ expiring_soon_count }}</p>
+    </div>
+    <div class="bg-white p-6 rounded-lg shadow-md border-l-4 border-blue-500">
+        <h2 class="text-gray-500 text-lg">Total Item Quantity</h2>
+        <p class="text-4xl font-bold text-blue-500">{{ total_items }}</p>
+    </div>
+</div>
+
+<!-- Urgent Alerts Section -->
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-red-600 mb-4">Urgent Alerts: Items Expiring Tomorrow</h2>
+    {% if urgent_alerts %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="p-3">Product</th>
+                        <th class="p-3">Brand</th>
+                        <th class="p-3">Location</th>
+                        <th class="p-3">Quantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in urgent_alerts %}
+                    <tr class="border-b hover:bg-red-50">
+                        <td class="p-3 font-medium">{{ item.product.name }}</td>
+                        <td class="p-3 text-gray-600">{{ item.product.brand }}</td>
+                        <td class="p-3 text-gray-600">{{ item.rack_zone }}</td>
+                        <td class="p-3 font-bold">{{ item.quantity }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="text-center py-8 bg-green-50 rounded-md">
+            <p class="text-lg text-green-700">No items are expiring tomorrow. All clear!</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+

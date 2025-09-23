@@ -38,6 +38,7 @@ urlpatterns = [
     path('cifar/', include('cifar.urls')),
     path('python/', include('PythONFire.urls')),
     path('chatbot/', include('chatbot.urls')),
+    path('inventory/', include('Inventory.urls')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', robots_txt, name='robots_txt')
 ]

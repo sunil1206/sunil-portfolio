@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Franprix Inventory{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .nav-active {
+            background-color: #34D399; /* Emerald 400 */
+            color: white;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="flex h-screen">
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-gray-800 text-white flex flex-col">
+            <div class="flex items-center justify-center h-20 border-b border-gray-700">
+                <i class="fas fa-store text-emerald-400 text-3xl"></i>
+                <h1 class="text-2xl font-bold ml-3">Franprix</h1>
+            </div>
+            <nav class="flex-1 px-4 py-6">
+                <a href="{% url 'dashboard' %}" class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors {% if request.path == '/' %}nav-active{% endif %}">
+                    <i class="fas fa-tachometer-alt w-6 text-center"></i>
+                    <span class="ml-4">Dashboard</span>
+                </a>
+                <a href="{% url 'scan_item' %}" class="flex items-center mt-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors {% if 'scan' in request.path %}nav-active{% endif %}">
+                    <i class="fas fa-barcode w-6 text-center"></i>
+                    <span class="ml-4">Scan Item</span>
+                </a>
+                <a href="{% url 'alert_monitor' %}" class="flex items-center mt-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors {% if 'alerts' in request.path %}nav-active{% endif %}">
+                    <i class="fas fa-bell w-6 text-center"></i>
+                    <span class="ml-4">Alert Monitor</span>
+                </a>
+                <a href="{% url 'inventory_list' %}" class="flex items-center mt-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors {% if 'inventory' in request.path %}nav-active{% endif %}">
+                    <i class="fas fa-boxes-stacked w-6 text-center"></i>
+                    <span class="ml-4">Full Inventory</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col">
+            <header class="h-20 bg-white border-b flex items-center px-8">
+                <h1 class="text-2xl font-bold text-gray-800">
+                    {% block header %}Dashboard{% endblock %}
+                </h1>
+            </header>
+            <div class="flex-1 p-8 overflow-y-auto">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <!-- Barcode Scanner Library (loaded here for availability on scan page) -->
+    <script src="https://cdn.jsdelivr.net/npm/@zxing/browser@0.1.4/umd/zxing-browser.min.js"></script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

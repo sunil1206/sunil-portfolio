@@ -50,7 +50,7 @@
     z-index: 1000;
   }
 
-  .chatfab:hover {
+  .chatfab:hover {z
     background-color: #8e44ad; /* A slightly darker shade for hover */
   }
 
@@ -215,57 +215,18 @@
     background-color: #8e44ad;
   }
 
-/* ============================== */
-/* ======= RESPONSIVE FIX ======= */
-/* ============================== */
-@media (max-width: 768px) {
-  .chat-container {
-    width: 100%;
-    height: 100dvh; /* Use dynamic viewport height */
-    bottom: 0;
-    right: 0;
-    border-radius: 0; /* Full-screen look */
+  /* =================================== */
+  /* ===== RESPONSIVE STYLES 📱 ===== */
+  /* =================================== */
+  @media (max-width: 600px) {
+    .chat-container {
+      width: 100%;
+      height: 100%;
+      bottom: 0;
+      right: 0;
+      border-radius: 0; /* Remove rounded corners for full-screen */
+    }
   }
-
-  .chat-header {
-    font-size: 1rem;
-    padding: 12px;
-  }
-
-  .chat-body {
-    padding: 8px;
-  }
-
-  .chat-message span {
-    font-size: 0.9rem; /* Slightly smaller bubbles */
-    padding: 10px 12px;
-  }
-
-  .chat-footer {
-    padding: 8px;
-  }
-
-  .chat-footer input {
-    font-size: 0.9rem;
-    padding: 8px 12px;
-  }
-
-  .chat-footer button {
-    width: 36px;
-    height: 36px;
-    font-size: 0.9rem;
-  }
-}
-
-/* Prevent floating button from clashing with full chat */
-@media (max-width: 768px) {
-  .chatfab {
-    bottom: 15px;
-    right: 15px;
-    width: 55px;
-    height: 55px;
-  }
-}
 
 </style>
 

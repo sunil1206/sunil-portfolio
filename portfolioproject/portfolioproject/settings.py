@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'cifar',
     'PythONFire',
     'chatbot',
+    'Inventory',
+'sslserver',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

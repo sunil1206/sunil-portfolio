@@ -1,0 +1,185 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}Scan Item - Franprix Inventory{% endblock %}
+
+{% block header %}Scan New Inventory Item{% endblock %}
+
+{% block content %}
+
+<!-- Camera Scanner Modal -->
+<div id="scanner-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex flex-col justify-center items-center p-4 z-50">
+    <div class="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md">
+        <p class="text-center font-semibold text-lg mb-4">Point camera at a barcode</p>
+        <video id="video" class="w-full h-auto rounded-lg"></video>
+        <button id="close-scanner-btn" class="mt-4 w-full bg-red-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-red-700 shadow-md">
+            Close Scanner
+        </button>
+    </div>
+</div>
+
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- Barcode Entry -->
+    <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-xl font-bold mb-4">Step 1: Scan Product Barcode</h2>
+        <div class="flex gap-2">
+            <input type="text" id="barcode-input" placeholder="Enter or scan barcode" class="flex-grow w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+            <button id="scan-camera-btn" class="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800" title="Scan with Camera">
+                <i class="fas fa-camera"></i>
+            </button>
+            <button id="check-barcode-btn" class="bg-green-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-green-700">Check</button>
+        </div>
+        <div id="api-status" class="mt-4"></div>
+    </div>
+
+    <!-- Inventory Details Form -->
+    <div id="inventory-form-container" class="bg-white p-6 rounded-lg shadow-md" style="display: none;">
+        <h2 class="text-xl font-bold mb-4">Step 2: Enter Batch Details</h2>
+        <div class="flex items-center gap-4 mb-6">
+            <img id="product-image" src="" alt="Product" class="w-24 h-24 object-contain rounded-md border p-1">
+            <div>
+                <h3 id="product-name" class="text-lg font-bold"></h3>
+                <p id="product-brand" class="text-gray-500"></p>
+            </div>
+        </div>
+
+        <form action="{% url 'scan_item' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" id="form-barcode" name="barcode">
+            <div class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label for="category" class="block text-sm font-medium text-gray-700">Category</label>
+                        <input type="text" name="category" required class="mt-1 w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div>
+                        <label for="rack_zone" class="block text-sm font-medium text-gray-700">Rack / Zone</label>
+                        <input type="text" name="rack_zone" required class="mt-1 w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                    <div>
+                        <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
+                        <input type="number" name="quantity" required value="1" min="1" class="mt-1 w-full p-2 border border-gray-300 rounded-md">
+                    </div>
+                </div>
+                <div>
+                    <label for="expiry_date" class="block text-sm font-medium text-gray-700">Expiry Date</label>
+                    <input type="date" name="expiry_date" required class="mt-1 w-full p-2 border border-gray-300 rounded-md">
+                </div>
+                <div>
+                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700">Add to Inventory</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const barcodeInput = document.getElementById('barcode-input');
+    const checkBtn = document.getElementById('check-barcode-btn');
+    const apiStatus = document.getElementById('api-status');
+    const formContainer = document.getElementById('inventory-form-container');
+
+    // Camera scanner elements
+    const scanCameraBtn = document.getElementById('scan-camera-btn');
+    const scannerModal = document.getElementById('scanner-modal');
+    const closeScannerBtn = document.getElementById('close-scanner-btn');
+    const codeReader = new ZXingBrowser.BrowserMultiFormatReader();
+
+    checkBtn.addEventListener('click', checkBarcode);
+    barcodeInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            checkBarcode();
+        }
+    });
+
+    // --- Camera Scanner Logic ---
+    scanCameraBtn.addEventListener('click', () => {
+        // Check for secure context
+        if (location.protocol !== 'https:') {
+            showStatus('Error: Camera access requires a secure (HTTPS) connection.', 'red');
+            apiStatus.innerHTML += '<p class="text-sm text-gray-600 mt-2">Try running the server with `python manage.py runsslserver`.</p>';
+            return;
+        }
+
+        scannerModal.classList.remove('hidden');
+        codeReader.listVideoInputDevices()
+            .then((videoInputDevices) => {
+                if (videoInputDevices.length > 0) {
+                    codeReader.decodeFromVideoDevice(videoInputDevices[0].deviceId, 'video', (result, err) => {
+                        if (result) {
+                            barcodeInput.value = result.text;
+                            stopScanner();
+                            checkBarcode(); // Automatically check the barcode after scanning
+                        }
+                        if (err && !(err instanceof ZXingBrowser.NotFoundException)) {
+                            console.error('ZXing error:', err);
+                            // This error often fires when no barcode is in view, so we don't show it to the user.
+                        }
+                    });
+                } else {
+                    showStatus('Error: No camera was found on this device.', 'red');
+                    stopScanner();
+                }
+            })
+            .catch(err => {
+                console.error('Camera access error:', err);
+                if (err.name === "NotAllowedError") {
+                    showStatus('Error: Camera permission was denied. Please allow camera access in your browser settings.', 'red');
+                } else {
+                    showStatus(`Error: Could not access camera. ${err.message}`, 'red');
+                }
+                stopScanner();
+            });
+    });
+
+    function stopScanner() {
+        codeReader.reset();
+        scannerModal.classList.add('hidden');
+    }
+
+    closeScannerBtn.addEventListener('click', stopScanner);
+    // --- End Camera Scanner Logic ---
+
+    async function checkBarcode() {
+        const barcode = barcodeInput.value.trim();
+        if (!barcode) {
+            showStatus('Please enter a barcode.', 'red');
+            return;
+        }
+
+        showStatus('Checking...', 'blue');
+        formContainer.style.display = 'none';
+
+        try {
+            const response = await fetch(`{% url 'check_barcode_api' %}?barcode=${barcode}`);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'An unknown error occurred.');
+            }
+
+            showStatus(`Product Found: ${data.name}`, 'green');
+            populateForm(data);
+
+        } catch (error) {
+            showStatus(`Error: ${error.message}`, 'red');
+        }
+    }
+
+    function showStatus(message, color) {
+        apiStatus.innerHTML = `<p class="text-${color}-600">${message}</p>`;
+    }
+
+    function populateForm(data) {
+        document.getElementById('product-image').src = data.imageUrl || 'https://placehold.co/96x96/e2e8f0/cbd5e0?text=N/A';
+        document.getElementById('product-name').textContent = data.name;
+        document.getElementById('product-brand').textContent = data.brand || 'No Brand Info';
+        document.getElementById('form-barcode').value = data.barcode;
+        formContainer.style.display = 'block';
+    }
+</script>
+{% endblock %}
+
